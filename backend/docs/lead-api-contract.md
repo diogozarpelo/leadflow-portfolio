@@ -214,7 +214,7 @@ Nenhum lead adicional é armazenado depois que o limite é atingido.
 Origens autorizadas atualmente:
 
 ```text
-https://leadflow.example
+https://diogozarpelo.github.io/leadflow-portfolio
 https://www.leadflow.example
 http://127.0.0.1:5500
 http://localhost:5500

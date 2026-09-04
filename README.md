@@ -14,28 +14,29 @@
 
 ## Demonstração visual
 
-<table>
-  <tr>
-    <td align="center">
-      <strong>Home — Desktop</strong><br>
-      <img src="docs/screenshots/01-home-hero.png" alt="Página inicial do LeadFlow Portfolio em desktop">
-    </td>
-    <td align="center">
-      <strong>Setores-Chave</strong><br>
-      <img src="docs/screenshots/02-sectors.png" alt="Seção de setores do LeadFlow Portfolio">
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <strong>Blog técnico</strong><br>
-      <img src="docs/screenshots/03-blog.png" alt="Blog técnico do LeadFlow Portfolio">
-    </td>
-    <td align="center">
-      <strong>Home — Mobile</strong><br>
-      <img src="docs/screenshots/04-home-mobile.png" alt="Página inicial responsiva do LeadFlow Portfolio" width="390">
-    </td>
-  </tr>
-</table>
+### Home — Desktop
+
+<p align="center">
+  <img src="docs/screenshots/01-home-hero.png" alt="Página inicial do LeadFlow Portfolio em desktop" width="900">
+</p>
+
+### Setores-Chave
+
+<p align="center">
+  <img src="docs/screenshots/02-sectors.png" alt="Seção de setores do LeadFlow Portfolio" width="900">
+</p>
+
+### Blog técnico
+
+<p align="center">
+  <img src="docs/screenshots/03-blog.png" alt="Blog técnico do LeadFlow Portfolio" width="900">
+</p>
+
+### Home — Mobile
+
+<p align="center">
+  <img src="docs/screenshots/04-home-mobile.png" alt="Página inicial responsiva do LeadFlow Portfolio" width="360">
+</p>
 
 ## Sobre o projeto
 

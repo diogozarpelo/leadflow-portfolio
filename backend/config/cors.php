@@ -20,7 +20,7 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => [
-        'https://leadflow.example',
+        'https://diogozarpelo.github.io/leadflow-portfolio',
         'https://www.leadflow.example',
         'http://127.0.0.1:5500',
         'http://localhost:5500',

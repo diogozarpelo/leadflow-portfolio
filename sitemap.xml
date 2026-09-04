@@ -2,23 +2,23 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://leadflow.example/</loc>
+    <loc>https://diogozarpelo.github.io/leadflow-portfolio/</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <image:image>
-      <image:loc>https://leadflow.example/assets/product/sles70.png</image:loc>
+      <image:loc>https://diogozarpelo.github.io/leadflow-portfolio/assets/product/sles70.png</image:loc>
       <image:title>LeadFlow Industrial - Lauril Éter Sulfato de Sódio 70% (SLES 70%)</image:title>
       <image:caption>SLES 70% Pure Grade - Teor de Matéria Ativa 70.52%</image:caption>
     </image:image>
     <image:image>
-      <image:loc>https://leadflow.example/assets/facilities/distribution-center.jpeg</image:loc>
+      <image:loc>https://diogozarpelo.github.io/leadflow-portfolio/assets/facilities/distribution-center.jpeg</image:loc>
       <image:title>Centro de Distribuição LeadFlow Industrial - São Paulo/SP</image:title>
       <image:caption>Armazenamento e logística química em São Paulo/SP</image:caption>
     </image:image>
   </url>
   <url>
-    <loc>https://leadflow.example/blog/</loc>
+    <loc>https://diogozarpelo.github.io/leadflow-portfolio/blog/</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

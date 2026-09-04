@@ -9,7 +9,7 @@ class CorsTest extends TestCase
     public function test_it_allows_the_configured_origins(): void
     {
         $allowedOrigins = [
-            'https://leadflow.example',
+            'https://diogozarpelo.github.io/leadflow-portfolio',
             'https://www.leadflow.example',
             'http://127.0.0.1:5500',
             'http://localhost:5500',

@@ -1,4 +1,4 @@
-# robots.txt for LeadFlow Industrial (https://leadflow.example)
+# robots.txt for LeadFlow Industrial (https://diogozarpelo.github.io/leadflow-portfolio)
 # Optimized for Search Engine Optimization (SEO) & Generative Engine Optimization (GEO)
 
 User-agent: *
@@ -28,4 +28,4 @@ User-agent: Applebot-Extended
 Allow: /
 
 # Sitemap Location
-Sitemap: https://leadflow.example/sitemap.xml
+Sitemap: https://diogozarpelo.github.io/leadflow-portfolio/sitemap.xml
