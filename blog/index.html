@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title data-i18n="blog_meta_title">Blog | LeadFlow Industrial</title>
+
+  <meta
+    name="description"
+    content="Conteúdos técnicos, aplicações e novidades sobre SLES 70%, matérias-primas químicas, cosméticos, higiene e limpeza."
+    data-i18n="blog_meta_description"
+  >
+
+  <!--
+    BLOQUEIO PROVISÓRIO DE INDEXAÇÃO:
+    remover somente depois da aprovação e da homologação em produção.
+  -->
+  <meta name="robots" content="noindex, nofollow">
+
+  <link rel="canonical" href="https://leadflow.example/blog/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog | LeadFlow Industrial">
+  <meta
+    property="og:description"
+    content="Conteúdos técnicos e novidades sobre SLES 70% e especialidades químicas."
+  >
+  <meta property="og:url" content="https://leadflow.example/blog/">
+  <meta property="og:site_name" content="LeadFlow Industrial">
+<!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/blog.css">
+</head>
+
+<body class="blog-page">
+  <a class="skip-link" href="#main-content">
+    Ir para o conteúdo principal
+  </a>
+
+  <!-- Cabeçalho -->
+  <header class="header" id="mainHeader">
+    <div class="nav-container">
+      <a href="../index.html#hero" class="brand-logo-wrap">
+        <span class="brand-primary">LEADFLOW</span>
+        <span class="brand-chem">CHEM</span>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="../index.html#hero" class="nav-link" data-i18n="nav_home">Início</a>
+        <a href="../index.html#sles" class="nav-link" data-i18n="nav_sles">SLES 70% Flagship</a>
+        <a href="../index.html#certs" class="nav-link" data-i18n="nav_certs">Certificações</a>
+        <a href="../index.html#sectors" class="nav-link" data-i18n="nav_sectors">Setores-Chave</a>
+        <a href="../index.html#infrastructure" class="nav-link" data-i18n="nav_infra">Infraestrutura</a>
+        <a href="../index.html#faq" class="nav-link" data-i18n="nav_faq">FAQ</a>
+        <a href="./" class="nav-link active" aria-current="page" data-i18n="nav_blog" data-pt-only>Blog</a>
+        <a href="../index.html#contact" class="nav-link" data-i18n="nav_contact">Contato</a>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-i18n="nav_request_sample">Solicitar Amostra</button>
+        <button class="mobile-toggle" id="mobileToggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Conteúdo principal -->
+  <main id="main-content">
+    <section class="blog-hero" aria-labelledby="blog-title">
+      <div class="blog-hero-content">
+        <span
+          class="section-badge"
+          data-i18n="blog_hero_badge"
+        >
+          Conteúdo LeadFlow Industrial
+        </span>
+
+        <h1 id="blog-title" data-i18n="blog_hero_title">
+          Conhecimento técnico para a indústria química
+        </h1>
+
+        <p data-i18n="blog_hero_description">
+          Conteúdos sobre SLES 70%, matérias-primas, aplicações industriais,
+          qualidade, inovação e tendências dos setores de cosméticos, higiene
+          e limpeza.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="blog-content"
+      aria-labelledby="articles-title"
+    >
+      <div class="blog-content-container">
+        <div class="blog-section-header">
+          <div>
+            <span
+              class="section-badge"
+              data-i18n="blog_articles_badge"
+            >
+              Publicações
+            </span>
+
+            <h2
+              id="articles-title"
+              data-i18n="blog_articles_title"
+            >
+              Todos os artigos
+            </h2>
+          </div>
+
+          <a
+            href="../index.html"
+            class="btn-outline"
+            data-i18n="blog_back_home"
+          >
+            Voltar para o site
+          </a>
+        </div>
+
+        <!-- Estado provisório enquanto o widget é carregado -->
+        <div
+          id="soro-status"
+          class="blog-widget-status"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            class="blog-loading-indicator"
+            aria-hidden="true"
+          ></div>
+
+          <div>
+            <strong data-i18n="blog_loading_title">
+              Carregando publicações
+            </strong>
+
+            <p data-i18n="blog_loading_description">
+              Os conteúdos do blog serão exibidos aqui.
+            </p>
+          </div>
+        </div>
+
+        <!--
+          O conteúdo demonstrativo é carregado localmente
+          sem conexão com serviços externos.
+        -->
+        <div
+          id="soro-blog"
+          class="soro-blog-container"
+          aria-busy="true"
+        ></div>
+        <nav
+          id="blogPagination"
+          class="blog-pagination"
+          aria-label="Paginação dos artigos"
+          hidden
+          ></nav>
+
+        <div
+          id="blogListEndAction"
+          class="blog-list-end-action"
+          hidden
+        >
+
+
+          <a
+            href="#articles-title"
+            class="btn-outline"
+            data-i18n="blog_back_top"
+          >
+            Voltar ao topo
+          </a>
+        </div>
+
+        <noscript>
+          <div class="blog-widget-message">
+            <strong>JavaScript necessário</strong>
+            <p>
+              Habilite o JavaScript do navegador para visualizar os artigos.
+            </p>
+          </div>
+        </noscript>
+      </div>
+    </section>
+  </main>
+
+  <!-- Technical Sample Modal -->
+  <div class="modal-overlay" id="sampleModal">
+    <div class="modal-card">
+      <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+      <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
+      <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
+
+      <form id="modalForm" action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+        <input type="hidden" name="_to" value="contato@leadflow.example">
+        <input type="hidden" name="_subject" value="Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial">
+        <div class="form-group">
+          <label data-i18n="form_name">Nome Completo</label>
+          <input type="text" id="modalName" name="nome" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="form_email">E-mail Corporativo</label>
+          <input type="email" id="modalEmail" name="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="form_company">Empresa</label>
+          <input type="text" id="modalCompany" name="empresa" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label data-i18n="modal_cnpj">CNPJ / Registro da Empresa</label>
+          <input type="text" id="modalCnpj" name="cnpj" class="form-control" required placeholder="00.000.000/0000-00" data-i18n="modal_cnpj_placeholder">
+        </div>
+        <div class="form-group">
+          <label data-i18n="modal_location">Cidade / Estado / País</label>
+          <input type="text" id="modalLocation" name="localizacao" class="form-control" required placeholder="Ex.: São Paulo / SP / Brasil" data-i18n="modal_location_placeholder">
+        </div>
+        <div class="form-group">
+          <label data-i18n="form_phone">Telefone / WhatsApp</label>
+          <input type="text" id="modalPhone" name="telefone" class="form-control" required placeholder="(00) 00000-0000" data-i18n="form_phone_placeholder">
+        </div>
+        <div class="form-group">
+          <label data-i18n="form_message">Especificações / Produto Solicitado</label>
+          <input type="text" class="form-control" id="modalMessage" name="especificacoes" placeholder="Descreva as especificações necessárias para a amostra" required
+          data-i18n="modal_message_placeholder">
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 1rem; padding: 0.9rem;" data-i18n="form_submit">Enviar Solicitação</button>
+        <div class="form-success-msg" id="modalSuccess" data-i18n="form_success">Sua solicitação foi enviada com sucesso! Nossa equipe entrará em contato em breve.</div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a
+          href="../index.html"
+          class="brand-logo-wrap dark-variant"
+          aria-label="LeadFlow Industrial — Página inicial"
+        >
+          <span class="brand-primary">LEADFLOW</span>
+          <span class="brand-chem">CHEM</span>
+        </a>
+
+        <p data-i18n="footer_tagline">
+          Qualidade, Suprimento Garantido e Inovação em SLES 70% e
+          Especialidades Químicas.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="nav_sectors">
+          Setores-Chave
+        </h5>
+
+        <div class="footer-links">
+          <a
+            href="../index.html#sectors"
+            data-i18n="cosmetics_title"
+          >
+            COSMÉTICOS
+          </a>
+
+          <a
+            href="../index.html#sectors"
+            data-i18n="cleaning_title"
+          >
+            LIMPEZA
+          </a>
+
+          <a
+            href="../index.html#sectors"
+            data-i18n="hygiene_title"
+          >
+            HIGIENE
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="nav_about">
+          Empresa
+        </h5>
+
+        <div class="footer-links">
+          <a
+            href="../index.html#sles"
+            data-i18n="nav_sles"
+          >
+            SLES 70% Flagship
+          </a>
+
+          <a
+            href="../index.html#certs"
+            data-i18n="nav_certs"
+          >
+            Certificações
+          </a>
+
+          <a
+            href="../index.html#infrastructure"
+            data-i18n="nav_infra"
+          >
+            Infraestrutura
+          </a>
+
+          <a href="./" data-i18n="nav_blog">
+            Blog
+          </a>
+
+          <a
+            href="../index.html#contact"
+            data-i18n="nav_contact"
+          >
+            Contato
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5 data-i18n="location_title">
+          Matriz Corporativa
+        </h5>
+
+        <address class="footer-address">
+          Centro Empresarial — São Paulo – SP<br>
+
+          <span data-i18n="footer_global_service">
+            Atendimento Global
+          </span><br>
+
+          <a href="mailto:contato@leadflow.example">
+            contato@leadflow.example
+          </a>
+        </address>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>
+        &copy; 2026 LeadFlow Industrial.
+        <span data-i18n="footer_rights">
+          Todos os direitos reservados.
+        </span>
+      </div>
+
+      <!--
+        As páginas jurídicas ainda não existem.
+        Usamos textos, e não links falsos com href="#".
+      -->
+      <div class="footer-legal-pending">
+        <span data-i18n="footer_privacy">
+          Política de Privacidade
+        </span>
+
+        <span data-i18n="footer_terms">
+          Termos de Uso
+        </span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts internos -->
+  <script src="../js/translations.js"></script>
+  <script src="../js/demo-posts.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/blog.js"></script>
+</body>
+</html>

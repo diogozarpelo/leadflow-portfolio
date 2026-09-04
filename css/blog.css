@@ -1,0 +1,847 @@
+/* =========================================================
+   LeadFlow Industrial — Blog
+   Estilos exclusivos da página /blog/
+   ========================================================= */
+
+/* Estrutura geral da página */
+.blog-page {
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-page #main-content {
+  flex: 1;
+  min-inline-size: 0;
+}
+
+.blog-page .footer {
+  margin-block-start: auto;
+}
+
+/* =========================================================
+   Acessibilidade
+   ========================================================= */
+
+.skip-link {
+  position: fixed;
+  inset-block-start: 0.75rem;
+  inset-inline-start: 0.75rem;
+  z-index: 2000;
+
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+
+  background: var(--primary-dark);
+  color: #ffffff;
+
+  font-weight: 700;
+  text-decoration: none;
+
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.blog-page :focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+/* =========================================================
+   Hero do blog
+   ========================================================= */
+
+.blog-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  padding-block-start: clamp(8rem, 14vw, 11rem);
+  padding-block-end: clamp(4rem, 9vw, 7rem);
+  padding-inline: clamp(1rem, 4vw, 2rem);
+
+  background: linear-gradient(
+  180deg,
+  #F5F3ED 0%,
+  #EFECE3 100%
+  );
+}
+
+/* Mesmos efeitos luminosos utilizados no Hero da landing */
+.blog-hero::before,
+.blog-hero::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+/* Luz verde superior direita */
+.blog-hero::before {
+  inset-block-start: -10%;
+  inset-inline-end: -5%;
+
+  inline-size: 500px;
+  block-size: 500px;
+
+  background: var(--primary);
+}
+
+/* Luz dourada inferior esquerda */
+.blog-hero::after {
+  inset-block-end: -10%;
+  inset-inline-start: -5%;
+
+  inline-size: 400px;
+  block-size: 400px;
+
+  background: var(--accent-gold);
+}
+
+.blog-hero-content {
+  inline-size: min(100%, 860px);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.blog-hero-content .section-badge {
+  margin-block-end: clamp(1rem, 2vw, 1.4rem);
+}
+
+.blog-hero h1 {
+  max-inline-size: 18ch;
+  margin-inline: auto;
+
+  font-size: clamp(2.25rem, 6vw, 4.75rem);
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+
+.blog-hero p {
+  max-inline-size: 68ch;
+  margin-block-start: clamp(1.25rem, 3vw, 1.75rem);
+  margin-inline: auto;
+
+  color: var(--text-muted);
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  line-height: 1.8;
+}
+
+/* =========================================================
+   Área de publicações
+   ========================================================= */
+
+.blog-content {
+  padding-block: clamp(3.5rem, 8vw, 7rem);
+  padding-inline: clamp(1rem, 4vw, 2rem);
+  background: var(--bg-card);
+}
+
+.blog-content-container {
+  inline-size: min(100%, 1280px);
+  margin-inline: auto;
+  min-inline-size: 0;
+}
+
+.blog-section-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 1.5rem;
+
+  margin-block-end: clamp(2rem, 5vw, 3.5rem);
+  padding-block-end: clamp(1.5rem, 4vw, 2.25rem);
+
+  border-block-end: 1px solid var(--border-light);
+}
+
+.blog-section-header .section-badge {
+  margin-block-end: 0.9rem;
+}
+
+.blog-section-header h2 {
+  font-size: clamp(1.85rem, 4vw, 3rem);
+  letter-spacing: -0.035em;
+}
+
+.blog-section-header .btn-outline {
+  inline-size: fit-content;
+  white-space: nowrap;
+}
+
+/* =========================================================
+   Estado de carregamento do widget
+   ========================================================= */
+
+.blog-widget-status,
+.blog-widget-message {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 1.5rem);
+
+  inline-size: min(100%, 760px);
+  margin-inline: auto;
+  padding: clamp(1.25rem, 4vw, 2rem);
+
+  border: 1px solid var(--border-light);
+  border-radius: clamp(16px, 3vw, 24px);
+
+  background: var(--bg-sand-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.blog-widget-status strong,
+.blog-widget-message strong {
+  display: block;
+  margin-block-end: 0.25rem;
+
+  color: var(--primary);
+  font-size: clamp(1rem, 2vw, 1.12rem);
+}
+
+.blog-widget-status p,
+.blog-widget-message p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.blog-loading-indicator {
+  inline-size: clamp(2.5rem, 6vw, 3.25rem);
+  aspect-ratio: 1;
+
+  border: 4px solid rgba(15, 76, 58, 0.14);
+  border-block-start-color: var(--primary);
+  border-radius: 50%;
+
+  animation: blog-loading-spin 0.9s linear infinite;
+}
+
+@keyframes blog-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================================================
+   Conteúdo recebido da Soro
+   ========================================================= */
+
+.soro-blog-container {
+  min-inline-size: 0;
+  inline-size: 100%;
+  overflow-wrap: anywhere;
+}
+
+.soro-blog-container:not(:empty) {
+  margin-block-start: clamp(1.5rem, 4vw, 3rem);
+}
+
+/*
+  Proteções responsivas para recursos que a Soro
+  eventualmente inserir dentro do widget.
+*/
+.soro-blog-container :where(img, video) {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+
+.soro-blog-container :where(iframe) {
+  display: block;
+  max-inline-size: 100%;
+}
+
+.soro-blog-container :where(table) {
+  display: block;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+/* Navegação exibida ao final de cada artigo */
+.blog-article-end-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  margin-block-start: clamp(2.5rem, 6vw, 4rem);
+  padding-block-start: 2rem;
+
+  border-block-start: 1px solid var(--border-light);
+}
+
+.blog-page .soro-blog-container
+.blog-article-end-action .btn-outline {
+  inline-size: fit-content;
+  white-space: nowrap;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.blog-page .soro-blog-container
+.blog-article-end-action .btn-outline:visited,
+.blog-page .soro-blog-container
+.blog-article-end-action .btn-outline:hover,
+.blog-page .soro-blog-container
+.blog-article-end-action .btn-outline:focus-visible {
+  color: var(--primary);
+}
+
+@media (max-width: 767px) {
+  .blog-article-end-action .btn-outline {
+    inline-size: 100%;
+    min-inline-size: 0;
+  }
+}
+
+/* =========================================================
+   Cards da listagem do Blog
+   ========================================================= */
+
+.blog-page .soro-blog-container .soro-blog {
+  max-inline-size: 1100px;
+}
+
+.blog-page .soro-blog-container .soro-blog-list {
+  gap: 1.5rem;
+}
+
+.blog-page .soro-blog-container .soro-blog-card {
+  display: flex;
+  gap: 1.5rem;
+  min-block-size: 12rem;
+  padding: 1.4rem;
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 20px;
+  box-shadow: var(--shadow-md);
+
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.blog-page .soro-blog-container .soro-blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(15, 76, 58, 0.28);
+  box-shadow: var(--shadow-lg);
+}
+
+.blog-page .soro-blog-container .soro-blog-card:focus-visible {
+  outline: 3px solid var(--accent-gold);
+  outline-offset: 4px;
+}
+
+.blog-page .soro-blog-container .soro-blog-card-image {
+  inline-size: 230px;
+  block-size: 160px;
+  flex-shrink: 0;
+
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.blog-page .soro-blog-container .soro-blog-card-content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-inline-size: 0;
+}
+
+.blog-page
+  .soro-blog-container
+  h2.soro-blog-card-title {
+  margin-block-end: 0.75rem;
+
+  font-family: var(--font-main);
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  line-height: 1.35;
+  color: var(--primary);
+}
+
+.blog-page .soro-blog-container .soro-blog-card-excerpt {
+  margin: 0;
+
+  font-family: var(--font-main);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-muted);
+
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  -webkit-line-clamp: 3;
+}
+
+.blog-page .soro-blog-container .soro-blog-card-date {
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+
+  font-family: var(--font-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/*
+  Mantém o texto completo do artigo em uma largura
+  confortável para leitura, mesmo com a lista mais larga.
+*/
+.blog-page .soro-blog-container .soro-blog-article,
+.blog-page .soro-blog-container .soro-blog-header {
+  max-inline-size: 800px;
+  margin-inline: auto;
+}
+
+/* Celulares: cards verticais e imagem superior */
+@media (max-width: 767px) {
+  .blog-page .soro-blog-container .soro-blog-card {
+    flex-direction: column;
+    gap: 0;
+    min-block-size: auto;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .blog-page .soro-blog-container .soro-blog-card-image {
+    inline-size: 100%;
+    block-size: auto;
+
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0;
+  }
+
+  .blog-page .soro-blog-container .soro-blog-card-content {
+    padding: 1.2rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-page .soro-blog-container .soro-blog-card {
+    transition: none;
+  }
+
+  .blog-page .soro-blog-container .soro-blog-card:hover {
+    transform: none;
+  }
+}
+
+/* Paginação da listagem de artigos */
+.blog-page
+  .soro-blog-container
+  .soro-blog-card[hidden] {
+  display: none !important;
+}
+
+.blog-pagination[hidden],
+.blog-list-end-action[hidden] {
+  display: none !important;
+}
+
+.blog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+
+  margin-block-start: clamp(2rem, 5vw, 3.5rem);
+}
+
+.blog-pagination-link,
+.blog-pagination-current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-inline-size: 2.75rem;
+  min-block-size: 2.75rem;
+  padding: 0.55rem 0.85rem;
+
+  font-family: var(--font-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+
+  border: 1.5px solid var(--primary);
+  border-radius: 999px;
+}
+
+.blog-pagination-link {
+  color: var(--primary);
+  background: transparent;
+  transition: var(--transition);
+}
+
+.blog-pagination-link:hover {
+  background: rgba(15, 76, 58, 0.06);
+  transform: translateY(-1px);
+}
+
+.blog-pagination-current {
+  color: #FFFFFF;
+  background: var(--primary);
+}
+
+.blog-pagination-direction {
+  min-inline-size: 7rem;
+}
+
+.blog-list-end-action {
+  display: flex;
+  justify-content: center;
+
+  margin-block-start: 1rem;
+}
+
+.blog-list-end-action .btn-outline {
+  inline-size: fit-content;
+  white-space: nowrap;
+}
+
+#articles-title {
+  scroll-margin-block-start: 6rem;
+}
+
+@media (max-width: 767px) {
+  .blog-pagination {
+    gap: 0.5rem;
+  }
+
+  .blog-pagination-direction {
+    min-inline-size: auto;
+  }
+
+  .blog-list-end-action .btn-outline {
+    inline-size: 100%;
+  }
+}
+
+/* =========================================================
+   Aprimoramentos tipográficos
+   ========================================================= */
+
+@supports (text-wrap: balance) {
+  .blog-hero h1,
+  .blog-hero p,
+  .blog-section-header h2 {
+    text-wrap: balance;
+  }
+}
+
+/* =========================================================
+   Tablets e telas intermediárias
+   O menu recolhe antes de ficar sem espaço.
+   ========================================================= */
+
+@media (max-width: 1100px) {
+  .blog-page .nav-menu {
+    position: fixed;
+    inset-block-start: 69px;
+    inset-inline: 0;
+
+    inline-size: 100%;
+    max-block-size: calc(100dvh - 69px);
+    overflow-y: auto;
+
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+
+    padding: 1.25rem clamp(1rem, 4vw, 2rem) 2rem;
+
+    background: rgba(245, 243, 237, 0.98);
+    border-block-end: 1px solid var(--border-light);
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .blog-page .nav-menu.active {
+    display: flex;
+  }
+
+  .blog-page .nav-link {
+    inline-size: 100%;
+    padding: 0.8rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.95rem;
+  }
+
+  .blog-page .nav-link:hover,
+  .blog-page .nav-link.active {
+    background: rgba(15, 76, 58, 0.07);
+  }
+
+  .blog-page .nav-link::after {
+    display: none;
+  }
+
+  .blog-page .mobile-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* =========================================================
+   Tablets maiores
+   ========================================================= */
+
+@media (min-width: 768px) {
+  .blog-section-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+/* =========================================================
+   Celulares
+   ========================================================= */
+
+@media (max-width: 767px) {
+  .blog-hero {
+    padding-block-start: clamp(7.5rem, 28vw, 9rem);
+  }
+
+  .blog-widget-status,
+  .blog-widget-message {
+    align-items: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-widget-status,
+  .blog-widget-message {
+    grid-template-columns: 1fr;
+  }
+
+  .blog-loading-indicator {
+    inline-size: 2.5rem;
+  }
+}
+
+/* =========================================================
+   Preferências de acessibilidade
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .blog-page *,
+  .blog-page *::before,
+  .blog-page *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .blog-loading-indicator {
+    animation: none;
+    border-color: rgba(15, 76, 58, 0.2);
+    border-block-start-color: var(--primary);
+  }
+}
+
+/* Estado de indisponibilidade da integração externa */
+.blog-widget-status.is-error {
+  grid-template-columns: minmax(0, 1fr);
+  border-color: rgba(200, 168, 87, 0.42);
+  background: rgba(200, 168, 87, 0.08);
+}
+
+.blog-widget-status[hidden] {
+  display: none;
+}
+
+/* CTA alternativo exibido dentro do menu em celulares estreitos */
+.blog-mobile-sample {
+  display: none;
+}
+
+@media (max-width: 390px) {
+  .blog-page .nav-menu .blog-mobile-sample {
+    display: inline-flex;
+    inline-size: 100%;
+    margin-block-start: 0.75rem;
+    padding-block: 0.8rem;
+
+    color: #ffffff;
+    background: var(--primary);
+    text-align: center;
+  }
+
+  .blog-page .nav-menu .blog-mobile-sample:hover,
+  .blog-page .nav-menu .blog-mobile-sample:focus-visible {
+    color: #ffffff;
+    background: var(--primary-dark);
+  }
+}
+
+.blog-mobile-sample {
+  font-family: inherit;
+}
+/* Ajustes da publicação demonstrativa local */
+.blog-page #blog-title {
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.15;
+}
+
+.blog-page .blog-section-header h2 {
+  font-size: clamp(1.55rem, 3vw, 2.15rem);
+  line-height: 1.25;
+}
+
+.blog-page .soro-blog-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: min(100%, 960px);
+  margin-inline: auto;
+}
+
+.blog-page .soro-blog-card {
+  color: inherit;
+  text-decoration: none !important;
+}
+
+.blog-page .soro-blog-card *,
+.blog-page .soro-blog-card:hover *,
+.blog-page .soro-blog-card:focus * {
+  text-decoration: none !important;
+}
+
+.blog-page .soro-blog-card-title {
+  font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+  line-height: 1.35;
+  text-align: left;
+}
+
+.blog-page .soro-blog-card-excerpt {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  text-align: left;
+}
+
+.blog-page .soro-blog-card-date {
+  font-size: 0.82rem;
+  text-decoration: none !important;
+}
+
+.blog-page .soro-blog-article {
+  display: block;
+  width: min(100%, 880px);
+  margin-inline: auto;
+  padding: clamp(1.5rem, 4vw, 3rem);
+
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 24px;
+  box-shadow: var(--shadow-md);
+}
+
+.blog-page .soro-blog-header {
+  width: min(100%, 760px);
+  margin-inline: auto;
+  text-align: center;
+}
+
+.blog-page .demo-blog-article-title {
+  margin: 0 0 0.9rem;
+
+  font-size: clamp(1.7rem, 3.5vw, 2.45rem);
+  line-height: 1.2;
+  text-align: center;
+  color: var(--primary);
+  text-decoration: none !important;
+}
+
+.blog-page .soro-blog-header .soro-blog-card-date {
+  display: block;
+  margin: 0;
+  text-align: center;
+}
+
+.blog-page .demo-blog-article-image {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  margin: 1.75rem 0 2.25rem;
+
+  object-fit: cover;
+  border-radius: 18px;
+}
+
+.blog-page .demo-blog-article-body {
+  width: min(100%, 720px);
+  margin-inline: auto;
+}
+
+.blog-page .demo-blog-section-title {
+  margin: 2rem 0 0.75rem;
+
+  font-size: clamp(1.2rem, 2.5vw, 1.55rem);
+  line-height: 1.35;
+  color: var(--primary);
+}
+
+.blog-page .demo-blog-article-body p {
+  margin: 0 0 1rem;
+
+  font-size: 1rem;
+  line-height: 1.8;
+  text-align: left;
+  color: var(--text-muted);
+}
+
+.blog-page .blog-article-end-action {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+
+  width: min(100%, 720px);
+  margin: 2.5rem auto 0;
+  padding-top: 2rem;
+
+  border-top: 1px solid var(--border-light);
+}
+
+.blog-page .blog-article-end-action .btn-outline {
+  text-decoration: none !important;
+}
+
+@media (max-width: 767px) {
+  .blog-page .soro-blog-article {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+
+  .blog-page .blog-article-end-action {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .blog-page .blog-article-end-action .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+}

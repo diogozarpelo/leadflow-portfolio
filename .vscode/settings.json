@@ -1,0 +1,7 @@
+{
+  "liveServer.settings.ignoreFiles": [
+    "**/backend/database/**",
+    "**/backend/storage/**",
+    "**/backend/bootstrap/cache/**"
+  ]
+}

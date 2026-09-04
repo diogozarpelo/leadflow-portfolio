@@ -1,0 +1,31 @@
+# robots.txt for LeadFlow Industrial (https://leadflow.example)
+# Optimized for Search Engine Optimization (SEO) & Generative Engine Optimization (GEO)
+
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /index.html
+Allow: /project-files/leadflow-documents/Dossie_Tecnico_SLES70_LEADFLOW_CHEM.html
+Allow: /Apresentacao_LEADFLOW_CHEM.html
+
+# Allow AI Search Engine Crawlers for GEO (Generative Engine Optimization)
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+# Sitemap Location
+Sitemap: https://leadflow.example/sitemap.xml

@@ -1,0 +1,7 @@
+﻿# Generated deployment package
+dist/
+
+# Operating-system files
+Thumbs.db
+Desktop.ini
+.DS_Store
