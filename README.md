@@ -8,8 +8,8 @@
   <img src="https://img.shields.io/badge/PHP-8.3-777BB4?logo=php&logoColor=white" alt="PHP 8.3">
   <img src="https://img.shields.io/badge/Laravel-13-FF2D20?logo=laravel&logoColor=white" alt="Laravel 13">
   <img src="https://img.shields.io/badge/JavaScript-Vanilla-F7DF1E?logo=javascript&logoColor=black" alt="JavaScript">
-  <img src="https://img.shields.io/badge/Testes-86%20aprovados-2E7D32" alt="86 testes aprovados">
-  <img src="https://img.shields.io/badge/Asserções-422%20aprovadas-1565C0" alt="422 asserções aprovadas">
+  <img src="https://img.shields.io/badge/Testes-87%20aprovados-2E7D32" alt="87 testes aprovados">
+  <img src="https://img.shields.io/badge/Asserções-426%20aprovadas-1565C0" alt="426 asserções aprovadas">
 </p>
 
 ## Demonstração visual
@@ -191,6 +191,16 @@ php artisan serve
 
 Abra a raiz do projeto com o Live Server. Durante o desenvolvimento local, mantenha a API disponível em `http://127.0.0.1:8000`.
 
+## Pacote de publicação
+
+O script `build-dist.ps1` gera a pasta `dist` somente com os arquivos públicos do frontend:
+
+~~~powershell
+.\build-dist.ps1
+~~~
+
+A pasta gerada é ignorada pelo Git e pode ser recriada a qualquer momento.
+
 ## Testes e qualidade
 
 Execute a suíte completa:
@@ -203,8 +213,8 @@ php artisan test
 Resultado da validação atual:
 
 ~~~text
-86 testes aprovados
-422 asserções aprovadas
+87 testes aprovados
+426 asserções aprovadas
 0 falhas
 ~~~
 
@@ -214,7 +224,7 @@ Valide o padrão de código:
 php vendor/bin/pint --test
 ~~~
 
-Todos os 70 arquivos PHP analisados foram aprovados pelo Laravel Pint.
+Todos os 73 arquivos PHP analisados foram aprovados pelo Laravel Pint.
 
 ## Segurança e privacidade
 
@@ -225,6 +235,15 @@ Todos os 70 arquivos PHP analisados foram aprovados pelo Laravel Pint.
 - entregas externas permanecem desabilitadas;
 - dados utilizados nos testes são exclusivamente fictícios;
 - imagens e identidade visual pertencem à versão demonstrativa.
+
+## Integrações futuras
+
+A arquitetura mantém pontos de extensão preparados para futuras integrações externas, sem ativá-las na versão pública:
+
+- 3C / 3C Plus para automação e entrega operacional de leads;
+- Kommo como CRM para acompanhamento comercial e sincronização do ciclo do lead.
+
+As credenciais, os contratos e os drivers definitivos serão implementados somente após homologação nos ambientes correspondentes.
 
 ## Status
 
