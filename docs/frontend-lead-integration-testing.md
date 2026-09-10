@@ -4,9 +4,9 @@
 
 Este documento registra o procedimento de validação da integração entre o frontend da LeadFlow Industrial e a API Laravel de leads.
 
-A integração está habilitada somente no ambiente local. Em produção, os formulários de contato e amostra continuam utilizando o FormSubmit, enquanto o fluxo do WhatsApp continua abrindo diretamente a conversa corporativa.
+A integração com a API está habilitada somente no ambiente local. Na versão pública demonstrativa, os três formulários simulam sucesso no navegador, sem transmitir dados nem abrir serviços externos.
 
-Nenhum dado é enviado atualmente à 3C ou à Kommo.
+Nenhum dado é enviado atualmente à 3C, à 3C Plus ou à Kommo.
 
 ## Pré-requisitos
 
@@ -63,7 +63,7 @@ O arquivo `.vscode/settings.json` impede que mudanças no SQLite, nos logs e no 
 |---|---|---|
 | Formulário principal | `contact` | Armazena o lead e exibe confirmação |
 | Solicitação de amostra | `sample_request` | Armazena o lead e mantém o modal aberto |
-| Modal do WhatsApp | `whatsapp` | Armazena o lead e depois abre a conversa |
+| Modal do WhatsApp | `whatsapp` | Armazena o lead, exibe confirmação local e fecha o modal |
 
 Todos os leads devem ser criados com status inicial `pending`.
 
@@ -114,7 +114,7 @@ Também foram confirmados:
 - layout RTL no idioma árabe;
 - limpeza dos campos após sucesso;
 - permanência do modal de amostra após o envio;
-- abertura da conversa no fluxo do WhatsApp.
+- confirmação do registro local sem abertura de conversa externa.
 
 ## Teste de indisponibilidade
 
@@ -151,11 +151,11 @@ Execute a suíte completa:
 php artisan test
 ```
 
-Linha de base validada em 31/08/2026:
+Linha de base validada em 10/09/2026:
 
 ```text
-78 testes aprovados
-344 asserções aprovadas
+87 testes aprovados
+426 asserções aprovadas
 ```
 
 Verifique também a formatação do backend:
@@ -167,7 +167,7 @@ php .\vendor\bin\pint --test
 Linha de base:
 
 ```text
-65 arquivos aprovados
+73 arquivos aprovados
 ```
 
 Para verificar a sintaxe do JavaScript:
@@ -182,9 +182,9 @@ Nenhuma saída representa sintaxe válida.
 
 - backend ainda não publicado;
 - integração ativa somente no ambiente local;
-- FormSubmit mantido no site de produção;
+- formulários públicos operando em modo demonstrativo, sem transmissão externa;
 - driver externo configurado como `null`;
-- nenhuma transmissão para a 3C;
+- nenhuma transmissão para a 3C ou para a 3C Plus;
 - nenhuma integração ativa com a Kommo;
 - nenhuma recepção de callback externo;
 - autenticação e contrato técnico da 3C ainda pendentes.
@@ -198,5 +198,5 @@ A integração local é considerada aprovada quando:
 3. os registros iniciam como `pending`;
 4. não existem envios duplicados;
 5. o usuário recebe confirmação ou erro adequado;
-6. o WhatsApp abre somente após o registro local;
+6. o WhatsApp registra o lead localmente sem abrir conversa externa;
 7. o repositório permanece limpo após os testes.

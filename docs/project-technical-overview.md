@@ -2,7 +2,7 @@
 
 > **Status do documento:** rascunho técnico do estado atual.
 >
-> **Última atualização:** 26/08/2026.
+> **Última atualização:** 10/09/2026.
 >
 > **Finalidade:** apresentar à equipe técnica da 3C a estrutura atual do site, do backend e dos pontos preparados para a futura integração.
 >
@@ -21,7 +21,7 @@ O conteúdo descreve:
 - a fundação implementada para o `External ID`;
 - os componentes que ainda dependem das definições oficiais da 3C.
 
-O site público permanece operacional no fluxo atual. Em desenvolvimento local, as três origens de lead já estão conectadas ao endpoint Laravel. O backend ainda não foi publicado, e a entrega externa permanece desativada.
+O site público opera em modo demonstrativo, sem transmitir dados nem abrir serviços externos. Em desenvolvimento local, as três origens de lead estão conectadas ao endpoint Laravel. O backend ainda não foi publicado, e a entrega externa permanece desativada.
 
 ## 2. Visão geral da solução atual
 
@@ -29,10 +29,10 @@ O site público permanece operacional no fluxo atual. Em desenvolvimento local, 
 |---|---|---|
 | Site institucional | HTML5, CSS3 e JavaScript | Publicado e operacional |
 | Internacionalização | JavaScript com conteúdo em cinco idiomas | Implementada |
-| Blog | Página própria integrada ao conteúdo da plataforma Soro | Implementado |
-| Formulário de contato | FormSubmit em produção e API Laravel no ambiente local | Integração local validada |
-| Solicitação de amostra | FormSubmit em produção e API Laravel no ambiente local | Integração local validada |
-| Atendimento por WhatsApp | API Laravel local seguida da abertura da conversa; abertura direta em produção | Integração local validada |
+| Blog | Página própria com conteúdo demonstrativo local | Implementado |
+| Formulário de contato | API Laravel local e simulação no site público | Integração local validada |
+| Solicitação de amostra | API Laravel local e simulação no site público | Integração local validada |
+| Atendimento por WhatsApp | API Laravel local e simulação sem abertura externa no site público | Integração local validada |
 | API de leads | Laravel 13 e PHP 8.3 | Implementada localmente |
 | Persistência local | SQLite | Implementada |
 | Banco planejado para produção | MySQL 8 | Preparado, ainda não publicado |
@@ -86,35 +86,34 @@ O frontend também possui:
 
 O frontend possui três origens de contato:
 
-| Origem | Desenvolvimento local | Produção atual |
+| Origem | Desenvolvimento local | Versão pública demonstrativa |
 |---|---|---|
-| Formulário de contato | Envia o lead para `POST /api/leads` com o tipo `contact` | FormSubmit e e-mail da LeadFlow Industrial |
-| Solicitação de amostra | Envia o lead para `POST /api/leads` com o tipo `sample_request` | FormSubmit e e-mail da LeadFlow Industrial |
-| Modal do WhatsApp | Registra o lead como `whatsapp` e, após a confirmação da API, abre a conversa preenchida | Abre diretamente o WhatsApp corporativo |
+| Formulário de contato | Envia o lead para `POST /api/leads` com o tipo `contact` | Simula sucesso sem transmitir dados |
+| Solicitação de amostra | Envia o lead para `POST /api/leads` com o tipo `sample_request` | Simula sucesso sem transmitir dados |
+| Modal do WhatsApp | Registra o lead como `whatsapp`, confirma o sucesso e fecha o modal | Simula sucesso sem transmitir dados nem abrir serviços externos |
 
 No ambiente local, os três fluxos enviam dados em JSON para a API Laravel. Os leads são validados e armazenados com status inicial `pending`.
 
-Os formulários de contato e amostra exibem estado de processamento, confirmação de sucesso e mensagem de erro. O fluxo do WhatsApp aguarda o registro do lead antes de abrir a nova aba, fechar o modal e limpar os campos.
+Os formulários de contato e amostra exibem estado de processamento, confirmação de sucesso e mensagem de erro. O fluxo do WhatsApp aguarda o registro local, exibe a confirmação, fecha o modal e limpa os campos, sem abrir serviços externos.
 
-Em produção, o comportamento anterior permanece ativo enquanto o backend ainda não foi publicado e homologado. Nenhum dado captado pelo site público é transmitido atualmente à 3C.
+Na versão pública demonstrativa, os três formulários simulam sucesso no navegador sem transmitir dados a serviços externos. Nenhum dado captado pelo site público é enviado atualmente à 3C, à 3C Plus ou à Kommo.
 
 ### 3.4 Blog, SEO e publicação
 
 A página principal possui metadados de SEO, endereço canônico, dados para compartilhamento em redes sociais e estrutura JSON-LD.
 
-O blog utiliza um widget externo da plataforma Soro. O frontend:
+O blog utiliza conteúdo demonstrativo local carregado pelos próprios arquivos JavaScript. O frontend:
 
 - carrega os artigos de forma assíncrona;
 - apresenta até nove artigos por página;
 - controla paginação e estados de carregamento;
-- exibe uma mensagem apropriada quando o conteúdo externo está indisponível;
+- exibe um estado apropriado quando não existem publicações locais disponíveis;
 - mostra somente a publicação mais recente na página principal;
 - mantém o conteúdo do blog restrito à experiência em português.
 
 A publicação do frontend é preparada pelo script `build-dist.ps1`. O processo recria a pasta `dist` e copia apenas:
 
 - `index.html`;
-- ícones personalizados do navegador ainda pendentes;
 - `robots.txt`;
 - `sitemap.xml`;
 - `assets`;
@@ -505,12 +504,12 @@ Os logs de entrega não devem registrar nome, e-mail, telefone, empresa, CNPJ, m
 
 ### 4.9 Testes automatizados e qualidade
 
-A última validação completa do backend, executada em 04/09/2026, apresentou:
+A última validação completa do backend, executada em 10/09/2026, apresentou:
 
-- 86 testes aprovados;
-- 422 asserções aprovadas;
+- 87 testes aprovados;
+- 426 asserções aprovadas;
 - nenhuma falha;
-- todos os 70 arquivos do backend aprovados pelo Laravel Pint.
+- todos os 73 arquivos do backend aprovados pelo Laravel Pint.
 
 A cobertura inclui:
 
@@ -642,7 +641,7 @@ A decisão definitiva será tomada depois da confirmação do fluxo, do volume, 
 |---|---|---|
 | Site institucional | Diogo Antonio Zarpelão | Manutenção do frontend e dos arquivos públicos |
 | Backend LeadFlow Industrial | Diogo Antonio Zarpelão | Desenvolvimento, testes, documentação e futura conexão |
-| Formulários do site | Diogo Antonio Zarpelão | Manutenção do fluxo atual e futura migração para a API |
+| Formulários do site | Diogo Antonio Zarpelão | Manutenção do modo demonstrativo e futura publicação da integração com a API |
 | Agente de voz | 3C | Desenvolvimento, operação e manutenção |
 | Automações da plataforma | 3C | Responsabilidade pelos componentes internos |
 | Credenciais internas da plataforma | 3C | Não fazem parte do código da LeadFlow Industrial |
@@ -659,8 +658,8 @@ Credenciais, tokens, chaves e senhas não devem ser registrados nesta documenta�
 |---|---:|---:|
 | Frontend institucional | Sim | Sim |
 | Blog e publicação em destaque | Sim | Sim |
-| FormSubmit para contato e amostra | Sim | Sim |
-| Atendimento direto por WhatsApp | Sim | Sim |
+| Modo demonstrativo dos formulários públicos | Sim | Sim |
+| Abertura externa de conversa pelo WhatsApp | Não | Não |
 | Endpoint `POST /api/leads` | Sim | Não |
 | Integração dos três formulários com a API | Sim | Não |
 | Persistência dos leads | Sim | Não |
@@ -683,9 +682,9 @@ Os recursos marcados como implementados e não publicados existem no código loc
 
 Em desenvolvimento local, os formulários de contato, solicitação de amostra e WhatsApp já enviam os leads para a API Laravel. Os três fluxos foram validados com persistência no banco SQLite e status inicial `pending`.
 
-Em produção, os formulários de contato e amostra continuam utilizando o FormSubmit. O atendimento por WhatsApp continua abrindo diretamente a conversa corporativa. Esse comportamento será mantido até a publicação e a homologação do backend.
+Na versão pública demonstrativa, os formulários de contato, solicitação de amostra e WhatsApp simulam sucesso no navegador, sem transmitir dados nem abrir serviços externos. Esse comportamento será mantido até a publicação e a homologação do backend.
 
-A entrega externa permanece desativada e o driver padrão continua configurado como `null`. O `LocalCsvLeadDeliveryDriver` está implementado somente para simulação controlada em desenvolvimento, mas não está ativo por padrão. Nenhum dado é transmitido atualmente à 3C ou à Kommo. Essa restrição evita assumir contratos, formatos e regras ainda não confirmados pelas equipes responsáveis.
+A entrega externa permanece desativada e o driver padrão continua configurado como `null`. O `LocalCsvLeadDeliveryDriver` está implementado somente para simulação controlada em desenvolvimento, mas não está ativo por padrão. Nenhum dado é transmitido atualmente à 3C, à 3C Plus ou à Kommo. Essa restrição evita assumir contratos, formatos e regras ainda não confirmados pelas equipes responsáveis.
 
 ## 9. Próximos passos
 
@@ -724,7 +723,7 @@ Quando a especificação oficial for recebida, este documento e o contrato da AP
 
 ## 11. Conclusão técnica
 
-O site público da LeadFlow Industrial está operacional e continua utilizando os canais atuais de contato.
+O site público da LeadFlow Industrial está operacional em modo demonstrativo, sem transmissão de dados ou abertura de serviços externos.
 
 O backend possui uma base funcional para receber, validar, armazenar e processar leads com segurança. A arquitetura de fila, tentativas, recuperação, logs e rastreabilidade já está implementada e protegida por testes.
 
@@ -738,6 +737,6 @@ Até que essas informações sejam recebidas e homologadas:
 - o driver continuará configurado como `null`;
 - a conexão dos formulários com o backend permanecerá restrita ao ambiente local;
 - nenhum webhook ou callback será publicado;
-- nenhum dado será transmitido à 3C.
+- nenhum dado será transmitido à 3C, à 3C Plus ou à Kommo.
 
 Este documento deverá evoluir junto com o projeto e receber uma revisão definitiva antes de ser utilizado como documentação final da integração.
