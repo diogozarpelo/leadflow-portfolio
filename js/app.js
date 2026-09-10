@@ -7,9 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initLanguage();
   initHeaderScroll();
   initMobileMenu();
-  initModal();
-  initForm();
-  initWhatsappLead();
+  initLeadModals();
+  initLeadForms();
+  initLeadInputMasks();
 });
 
 // Expose language setter globally for inline onclick handlers
@@ -93,6 +93,11 @@ function setLanguage(lang, { persist = true } = {}) {
     }
   });
 
+  document.querySelectorAll('[data-i18n-aria-label]').forEach(element => {
+    const label = translations[lang][element.dataset.i18nAriaLabel];
+    if (label !== undefined) element.setAttribute('aria-label', label);
+  });
+
   // Update selected class in dropdown
   document.querySelectorAll('.lang-option').forEach(opt => {
     if (opt.getAttribute('data-lang') === lang) {
@@ -158,184 +163,138 @@ function initMobileMenu() {
   }
 }
 
-// Accessible Technical Sample Modal
-let lastSampleModalTrigger = null;
+// Shared keyboard, focus and background control for lead dialogs.
+let activeLeadModal = null;
 
-function getSampleModalFocusableElements(modal) {
-  const selector = [
-    "a[href]",
-    "button:not([disabled])",
-    "input:not([disabled])",
-    "select:not([disabled])",
-    "textarea:not([disabled])",
-    '[tabindex]:not([tabindex="-1"])'
-  ].join(",");
+function initLeadModals() {
+  document.querySelectorAll('[data-lead-modal]').forEach(modal => {
+    modal.querySelector('[data-close-modal]')?.addEventListener(
+      'click', () => closeLeadModal(modal)
+    );
 
-  return Array.from(modal.querySelectorAll(selector)).filter(
-    (element) =>
-      !element.hidden &&
-      element.getAttribute("aria-hidden") !== "true"
+    modal.addEventListener('click', event => {
+      if (event.target === modal) closeLeadModal(modal);
+    });
+
+  });
+
+  document.addEventListener('keydown', event => {
+    if (!activeLeadModal) return;
+    const { modal } = activeLeadModal;
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeLeadModal(modal);
+    } else if (event.key === 'Tab') {
+      trapLeadModalFocus(event, modal);
+    }
+  });
+
+  document.querySelectorAll('[data-open-modal]').forEach(trigger => {
+    trigger.addEventListener('click', () => {
+      if (trigger.dataset.openModal === 'sampleModal') {
+        openSampleModal(trigger.dataset.sampleProduct, trigger);
+      } else {
+        openLeadModal(trigger.dataset.openModal, trigger);
+      }
+    });
+  });
+}
+
+function leadModalFocusableElements(modal) {
+  return Array.from(modal.querySelectorAll(
+    'a[href], button, input, select, textarea, [tabindex]'
+  )).filter(element =>
+    element.tabIndex >= 0 &&
+    !element.matches(':disabled') &&
+    !element.closest('[inert], [hidden], [aria-hidden="true"]') &&
+    element.getClientRects().length > 0 &&
+    getComputedStyle(element).visibility === 'visible'
   );
 }
 
-function closeSampleModal({ restoreFocus = true } = {}) {
-  const modal = document.getElementById("sampleModal");
+function trapLeadModalFocus(event, modal) {
+  const elements = leadModalFocusableElements(modal);
+  const first = elements[0];
+  const last = elements[elements.length - 1];
+  const currentIndex = elements.indexOf(document.activeElement);
 
-  if (!modal || !modal.classList.contains("open")) {
-    return;
+  if (!first) {
+    event.preventDefault();
+    modal.querySelector('.modal-card')?.focus();
+  } else if (event.shiftKey && currentIndex <= 0) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey &&
+    (currentIndex === -1 || document.activeElement === last)) {
+    event.preventDefault();
+    first.focus();
   }
-
-  modal.classList.remove("open");
-  modal.setAttribute("aria-hidden", "true");
-  modal.inert = true;
-
-  document.body.classList.remove("modal-open");
-
-  if (restoreFocus) {
-    const triggerIsVisible =
-      lastSampleModalTrigger &&
-      lastSampleModalTrigger.isConnected &&
-      lastSampleModalTrigger.getClientRects().length > 0;
-
-    const focusTarget = triggerIsVisible
-      ? lastSampleModalTrigger
-      : document.getElementById("mobileToggle");
-
-    focusTarget?.focus();
-  }
-
-  lastSampleModalTrigger = null;
 }
 
-function initModal() {
-  const modal = document.getElementById("sampleModal");
-  const closeButton = document.getElementById("modalCloseBtn");
-  const modalCard = modal?.querySelector(".modal-card");
-  const modalTitle = modal?.querySelector("h3");
-  const modalDescription = modal?.querySelector("p");
+function openLeadModal(modalId, trigger = document.activeElement) {
+  const modal = document.getElementById(modalId);
+  if (!modal || activeLeadModal?.modal === modal) return;
 
-  if (!modal || !modalCard) {
-    return;
+  if (activeLeadModal) {
+    // Switching dialogs should return focus to the original page trigger.
+    trigger = activeLeadModal.trigger;
+    closeLeadModal(activeLeadModal.modal, { restoreFocus: false });
   }
 
-  if (modalTitle) {
-    modalTitle.id = "sampleModalTitle";
-    modal.setAttribute(
-      "aria-labelledby",
-      "sampleModalTitle"
-    );
-  }
-
-  if (modalDescription) {
-    modalDescription.id = "sampleModalDescription";
-    modal.setAttribute(
-      "aria-describedby",
-      "sampleModalDescription"
-    );
-  }
-
-  modal.setAttribute("role", "dialog");
-  modal.setAttribute("aria-modal", "true");
-  modal.setAttribute("aria-hidden", "true");
-  modal.inert = true;
-
-  modalCard.setAttribute("tabindex", "-1");
-
-  if (closeButton) {
-    closeButton.type = "button";
-
-    closeButton.addEventListener("click", () => {
-      closeSampleModal();
-    });
-  }
-
-  modal.addEventListener("click", (event) => {
-    if (event.target === modal) {
-      closeSampleModal();
-    }
-  });
-
-  modal.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      closeSampleModal();
-      return;
-    }
-
-    if (event.key !== "Tab") {
-      return;
-    }
-
-    const focusableElements =
-      getSampleModalFocusableElements(modal);
-
-    if (focusableElements.length === 0) {
-      event.preventDefault();
-      modalCard.focus();
-      return;
-    }
-
-    const firstElement = focusableElements[0];
-    const lastElement =
-      focusableElements[focusableElements.length - 1];
-
-    if (
-      event.shiftKey &&
-      document.activeElement === firstElement
-    ) {
-      event.preventDefault();
-      lastElement.focus();
-    } else if (
-      !event.shiftKey &&
-      document.activeElement === lastElement
-    ) {
-      event.preventDefault();
-      firstElement.focus();
-    }
-  });
-}
-
-function openSampleModal(productName = "SLES 70%") {
-  const modal = document.getElementById("sampleModal");
-  const closeButton = document.getElementById("modalCloseBtn");
-  const modalCard = modal?.querySelector(".modal-card");
-
-  if (!modal) {
-    return;
-  }
-
-  lastSampleModalTrigger =
-    document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null;
-
+  const background = new Map();
+  const bodyWasLocked = document.body.classList.contains('modal-open');
   modal.inert = false;
-  modal.setAttribute("aria-hidden", "false");
-  modal.classList.add("open");
+  modal.setAttribute('aria-hidden', 'false');
+  modal.classList.add('open');
+  document.body.classList.add('modal-open');
 
-  document.body.classList.add("modal-open");
-
-  if (closeButton) {
-    closeButton.setAttribute(
-      "aria-label",
-      translations[currentLang]?.modal_close || "Fechar"
-    );
-  }
-
-  const modalSuccess =
-    document.getElementById("modalSuccess");
-
-  if (modalSuccess) {
-    modalSuccess.style.display = "none";
-  }
-
-  window.requestAnimationFrame(() => {
-    if (closeButton) {
-      closeButton.focus();
-    } else {
-      modalCard?.focus();
+  // Walk ancestors as well, so dialogs can live inside a page container.
+  for (let branch = modal; branch.parentElement; branch = branch.parentElement) {
+    for (const sibling of branch.parentElement.children) {
+      if (sibling !== branch && sibling instanceof HTMLElement) {
+        background.set(sibling, sibling.inert);
+        sibling.inert = true;
+      }
     }
-  });
+    if (branch.parentElement === document.body) break;
+  }
+
+  activeLeadModal = { modal, trigger, background, bodyWasLocked };
+  const focusTarget = leadModalFocusableElements(modal)[0] ||
+    modal.querySelector('.modal-card');
+  focusTarget?.focus();
+}
+
+function closeLeadModal(modal, { restoreFocus = true } = {}) {
+  if (!modal || activeLeadModal?.modal !== modal) return;
+
+  const { trigger, background, bodyWasLocked } = activeLeadModal;
+  background.forEach((wasInert, element) => { element.inert = wasInert; });
+  document.body.classList.toggle('modal-open', bodyWasLocked);
+
+  if (restoreFocus && trigger instanceof HTMLElement &&
+    trigger.isConnected && trigger.getClientRects().length > 0 &&
+    !trigger.closest('[inert]') && !trigger.matches(':disabled')) {
+    trigger.focus();
+  }
+
+  // Move focus out before hiding the dialog from assistive technology.
+  if (modal.contains(document.activeElement)) document.activeElement.blur();
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  modal.inert = true;
+  activeLeadModal = null;
+}
+
+// Public entry point also used by the blog's dynamically generated buttons.
+function openSampleModal(productName = 'SLES 70%', trigger = document.activeElement) {
+  const success = document.getElementById('modalSuccess');
+  if (success) success.style.display = 'none';
+  openLeadModal('sampleModal', trigger);
+}
+
+function closeSampleModal(options = {}) {
+  closeLeadModal(document.getElementById('sampleModal'), options);
 }
 
 // Target Email for all Contact Forms
@@ -349,6 +308,12 @@ const USE_LOCAL_LEAD_API = [
   '127.0.0.1',
   'localhost'
 ].includes(window.location.hostname);
+
+const LEAD_REQUEST_HEADERS = Object.freeze({
+  'Content-Type': 'application/json',
+  Accept: 'application/json'
+});
+
 function createPortfolioDemoResponse() {
   return {
     ok: true,
@@ -359,425 +324,405 @@ function createPortfolioDemoResponse() {
   };
 }
 
-// Form Submission
-function initForm() {
-  const contactForm = document.getElementById('contactForm');
-  const modalForm = document.getElementById('modalForm');
+async function submitLeadRequest(
+  apiPayload,
+  _emailPayload,
+  fallbackErrorMessage
+) {
+  const response = USE_LOCAL_LEAD_API
+    ? await fetch(LOCAL_LEAD_API_URL, {
+      method: 'POST',
+      headers: LEAD_REQUEST_HEADERS,
+      body: JSON.stringify(apiPayload)
+    })
+    : createPortfolioDemoResponse();
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
+  const data = await response.json();
 
-      const name = document.getElementById('contact_name')?.value.trim() || '';
-      const email = document.getElementById('contact_email')?.value.trim() || '';
-      const company = document.getElementById('contact_company')?.value.trim() || '';
-      const cnpj = document.getElementById('contact_cnpj')?.value.trim() || '';
-      const phone = document.getElementById('contact_phone')?.value.trim() || '';
-
-      const sectorSelect = document.getElementById('contact_sector');
-      const sector = sectorSelect?.selectedOptions[0]?.textContent.trim() || '';
-
-      const message = document.getElementById('contact_message')?.value.trim() || '';
-
-      const payload = {
-        "_subject": `Novo Contato pelo Site - LeadFlow Industrial (${name})`,
-        "_replyto": email,
-        "_to": TARGET_CONTACT_EMAIL,
-
-        "Nome Completo": name,
-        "Empresa": company,
-        "email": email,
-        "CNPJ / Registro da Empresa": cnpj,
-        "Telefone / WhatsApp": phone,
-        "Setor": sector,
-        "Mensagem": message
-      };
-
-      const leadApiPayload = {
-        type: 'contact',
-        name,
-        email,
-        company,
-        company_registration: cnpj || null,
-        phone,
-        sector: sectorSelect?.value || '',
-        message,
-        language: currentLang,
-        source_page: 'home',
-        website: ''
-      };
-
-      // Direct email notification to contato@leadflow.example via FormSubmit AJAX
-      const submitButton = contactForm.querySelector('button[type="submit"]');
-      const successMsg = document.getElementById('contactSuccess');
-      const originalButtonText = submitButton?.textContent || '';
-
-      if (successMsg) {
-        successMsg.style.display = 'none';
-      }
-
-      if (submitButton) {
-        submitButton.disabled = true;
-        submitButton.textContent =
-          translations[currentLang]?.form_sending || "Enviando...";
-      }
-
-      try {
-        const response = USE_LOCAL_LEAD_API
-          ? await fetch(LOCAL_LEAD_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            body: JSON.stringify(leadApiPayload)
-          })
-          : createPortfolioDemoResponse();
-
-        const data = await response.json();
-
-        if (
-          !response.ok ||
-          (
-            !USE_LOCAL_LEAD_API &&
-            (
-              data.success === false ||
-              data.success === 'false'
-            )
-          )
-        ) {
-          throw new Error(
-            data.message || 'Falha ao enviar o formulário.'
-          );
-        }
-
-        if (successMsg) {
-          successMsg.style.display = 'block';
-        }
-
-        contactForm.reset();
-      } catch (error) {
-        console.error('Erro ao enviar formulário de contato:', error);
-
-        alert(
-          'Não foi possível enviar sua mensagem. Verifique sua conexão e tente novamente.'
-        );
-      } finally {
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalButtonText;
-        }
-      }
-    });
+  if (
+    !response.ok ||
+    data.success === false ||
+    data.success === 'false'
+  ) {
+    throw new Error(
+      data.message || fallbackErrorMessage
+    );
   }
 
-  if (modalForm) {
-    modalForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const name = document.getElementById('modalName')?.value.trim() || '';
-      const email = document.getElementById('modalEmail')?.value.trim() || '';
-      const company = document.getElementById('modalCompany')?.value.trim() || '';
-      const cnpj = document.getElementById('modalCnpj')?.value.trim() || '';
-      const location = document.getElementById('modalLocation')?.value.trim() || '';
-      const phone = document.getElementById('modalPhone')?.value.trim() || '';
-      const message = document.getElementById('modalMessage')?.value.trim() || '';
-
-      const modalSuccess = document.getElementById('modalSuccess');
-      const submitButton = modalForm.querySelector('button[type="submit"]');
-      const originalButtonText = submitButton?.textContent.trim() || '';
-
-      if (modalSuccess) {
-        modalSuccess.style.display = 'none';
-      }
-
-      const payload = {
-        "_subject": `Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial (${name})`,
-        "_replyto": email,
-        "_to": TARGET_CONTACT_EMAIL,
-        "Nome Completo": name,
-        "Empresa": company,
-        "CNPJ / Registro da Empresa": cnpj,
-        "Cidade / Estado / País": location,
-        "email": email,
-        "Telefone / WhatsApp": phone,
-        "Especificações / Amostra": message
-      };
-
-      const sampleApiPayload = {
-        type: 'sample_request',
-        name,
-        email,
-        company,
-        company_registration: cnpj,
-        phone,
-        location,
-        message,
-        language: currentLang,
-        source_page: 'home',
-        website: ''
-      };
-
-      try {
-        if (submitButton) {
-          submitButton.disabled = true;
-          submitButton.textContent =
-            translations[currentLang]?.form_sending || 'Enviando...';
-        }
-
-        const response = USE_LOCAL_LEAD_API
-          ? await fetch(LOCAL_LEAD_API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json'
-            },
-            body: JSON.stringify(sampleApiPayload)
-          })
-          : createPortfolioDemoResponse();
-
-        const data = await response.json();
-
-        if (
-          !response.ok ||
-          (
-            !USE_LOCAL_LEAD_API &&
-            (
-              data.success === false ||
-              data.success === 'false'
-            )
-          )
-        ) {
-          throw new Error(
-            data.message || 'Falha ao enviar a solicitação.'
-          );
-        }
-
-        modalForm.reset();
-
-        if (modalSuccess) {
-          modalSuccess.textContent =
-            translations[currentLang]?.form_success ||
-            'Solicitação enviada com sucesso! Nossa equipe entrará em contato.';
-
-          modalSuccess.style.display = 'block';
-        }
-      } catch (error) {
-        console.error('Erro ao enviar solicitação de amostra:', error);
-
-        alert(
-          'Não foi possível enviar a solicitação. Verifique sua conexão e tente novamente.'
-        );
-      } finally {
-        if (submitButton) {
-          submitButton.disabled = false;
-          submitButton.textContent = originalButtonText;
-        }
-      }
-    });
-  }
+  return data;
 }
-// Configurable WhatsApp Target Number (Change this to your actual corporate number)
-const WHATSAPP_TARGET_NUMBER = '5500000000000';
 
-// WhatsApp Floating Button & Lead Form Logic
-function initWhatsappLead() {
-  const phoneSelectors = ['wa_lead_phone', 'contact_phone', 'modalPhone'];
-  phoneSelectors.forEach(id => {
-    const phoneInput = document.getElementById(id);
-    if (phoneInput) {
-      phoneInput.addEventListener('input', (e) => {
-        if (
-          (
-            id === 'contact_phone' ||
-            id === 'modalPhone' ||
-            id === 'wa_lead_phone'
-          ) &&
-          currentLang !== 'pt'
-        ) {
-          let internationalPhone = e.target.value.replace(/[^\d+()\s-]/g, '');
+// Lead Forms
+function initLeadForms() {
+  document
+    .getElementById('contactForm')
+    ?.addEventListener('submit', submitContactForm);
 
-          // Mantém o sinal de + somente no começo
-          internationalPhone = internationalPhone.replace(/(?!^)\+/g, '');
+  document
+    .getElementById('modalForm')
+    ?.addEventListener('submit', submitSampleRequestForm);
 
-          // Evita números excessivamente longos
-          if (internationalPhone.length > 25) {
-            internationalPhone = internationalPhone.substring(0, 25);
-          }
+  document
+    .getElementById('whatsappLeadForm')
+    ?.addEventListener('submit', submitWhatsappLead);
+}
 
-          e.target.value = internationalPhone;
-          return;
-        }
+function readTrimmedInput(inputId) {
+  return document
+    .getElementById(inputId)
+    ?.value
+    .trim() || '';
+}
 
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 11) value = value.substring(0, 11);
+function selectedOptionText(select) {
+  return select
+    ?.selectedOptions[0]
+    ?.textContent
+    .trim() || '';
+}
 
-        if (value.length > 10) {
-          // Mobile layout: (XX) XXXXX-XXXX
-          e.target.value = `(${value.substring(0, 2)}) ${value.substring(2, 7)}-${value.substring(7)}`;
-        } else if (value.length > 6) {
-          // Landline layout: (XX) XXXX-XXXX
-          e.target.value = `(${value.substring(0, 2)}) ${value.substring(2, 6)}-${value.substring(6)}`;
-        } else if (value.length > 2) {
-          e.target.value = `(${value.substring(0, 2)}) ${value.substring(2)}`;
-        } else if (value.length > 0) {
-          e.target.value = `(${value}`;
-        } else {
-          e.target.value = '';
-        }
-      });
+function setSubmitButtonState(
+  button,
+  isSubmitting,
+  originalText
+) {
+  if (!button) {
+    return;
+  }
+
+  button.disabled = isSubmitting;
+  button.textContent = isSubmitting
+    ? translations[currentLang]?.form_sending || 'Enviando...'
+    : originalText;
+}
+
+async function handleLeadFormSubmission({
+  form,
+  apiPayload,
+  formSubmitPayload,
+  successElement,
+  successText,
+  fallbackErrorMessage,
+  consoleErrorMessage,
+  alertMessage
+}) {
+  const submitButton =
+    form.querySelector('button[type="submit"]');
+
+  const originalButtonText =
+    submitButton?.textContent.trim() || '';
+
+  if (successElement) {
+    successElement.style.display = 'none';
+  }
+
+  setSubmitButtonState(
+    submitButton,
+    true,
+    originalButtonText
+  );
+
+  try {
+    await submitLeadRequest(
+      apiPayload,
+      formSubmitPayload,
+      fallbackErrorMessage
+    );
+
+    form.reset();
+
+    if (successElement) {
+      if (successText) {
+        successElement.textContent = successText;
+      }
+
+      successElement.style.display = 'block';
     }
-  });
-
-  const cnpjSelectors = ['wa_lead_cnpj', 'contact_cnpj', 'modalCnpj'];
-  cnpjSelectors.forEach(id => {
-    const cnpjInput = document.getElementById(id);
-    if (cnpjInput) {
-      cnpjInput.addEventListener('input', (e) => {
-        if (
-          (
-            id === 'contact_cnpj' ||
-            id === 'modalCnpj' ||
-            id === 'wa_lead_cnpj'
-          ) &&
-          currentLang !== 'pt'
-        ) {
-          return;
-        }
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length > 14) value = value.substring(0, 14);
-
-        if (value.length > 12) {
-          e.target.value = `${value.substring(0, 2)}.${value.substring(2, 5)}.${value.substring(5, 8)}/${value.substring(8, 12)}-${value.substring(12)}`;
-        } else if (value.length > 8) {
-          e.target.value = `${value.substring(0, 2)}.${value.substring(2, 5)}.${value.substring(5, 8)}/${value.substring(8)}`;
-        } else if (value.length > 5) {
-          e.target.value = `${value.substring(0, 2)}.${value.substring(2, 5)}.${value.substring(5)}`;
-        } else if (value.length > 2) {
-          e.target.value = `${value.substring(0, 2)}.${value.substring(2)}`;
-        } else {
-          e.target.value = value;
-        }
-      });
-    }
-  });
-}
-
-function openWhatsappLeadModal() {
-  toggleWhatsappLeadModal(true);
-}
-
-function closeWhatsappLeadModal(e) {
-  const modal = document.getElementById('whatsappLeadModal');
-  if (e.target === modal) {
-    toggleWhatsappLeadModal(false);
+  } catch (error) {
+    console.error(consoleErrorMessage, error);
+    alert(alertMessage);
+  } finally {
+    setSubmitButtonState(
+      submitButton,
+      false,
+      originalButtonText
+    );
   }
 }
 
-function toggleWhatsappLeadModal(open) {
-  const modal = document.getElementById('whatsappLeadModal');
-  if (modal) {
-    if (open) {
-      modal.classList.add('open');
-    } else {
-      modal.classList.remove('open');
-    }
-  }
-}
+async function submitContactForm(event) {
+  event.preventDefault();
 
-async function submitWhatsappLead(e) {
-  e.preventDefault();
+  const form = event.currentTarget;
+  const name = readTrimmedInput('contact_name');
+  const email = readTrimmedInput('contact_email');
+  const company = readTrimmedInput('contact_company');
+  const cnpj = readTrimmedInput('contact_cnpj');
+  const phone = readTrimmedInput('contact_phone');
+  const message = readTrimmedInput('contact_message');
 
-  const name = document.getElementById('wa_lead_name').value;
-  const phone = document.getElementById('wa_lead_phone').value;
-  const email = document.getElementById('wa_lead_email').value;
-  const company = document.getElementById('wa_lead_company').value;
-  const cnpj = document.getElementById('wa_lead_cnpj').value;
-  const qty = document.getElementById('wa_lead_qty').value;
+  const sectorSelect =
+    document.getElementById('contact_sector');
 
-  const whatsappApiPayload = {
-    type: 'whatsapp',
+  const sector = selectedOptionText(sectorSelect);
+
+  const formSubmitPayload = {
+    '_subject': `Novo Contato pelo Site - LeadFlow Industrial (${name})`,
+    '_replyto': email,
+    '_to': TARGET_CONTACT_EMAIL,
+    'Nome Completo': name,
+    'Empresa': company,
+    'email': email,
+    'CNPJ / Registro da Empresa': cnpj,
+    'Telefone / WhatsApp': phone,
+    'Setor': sector,
+    'Mensagem': message
+  };
+
+  const apiPayload = {
+    type: 'contact',
     name,
     email,
     company,
-    company_registration: cnpj,
+    company_registration: cnpj || null,
     phone,
-    quantity: qty,
+    sector: sectorSelect?.value || '',
+    message,
     language: currentLang,
     source_page: 'home',
     website: ''
   };
 
-  const messagePt =
-    `Olá, gostaria de falar com um especialista da LEADFLOW. Aqui estão meus dados:\n\n` +
-    `• Nome: ${name}\n` +
-    `• Empresa: ${company}\n` +
-    `• CNPJ: ${cnpj}\n` +
-    `• Telefone / WhatsApp: ${phone}\n` +
-    `• E-mail: ${email}\n` +
-    `• Quantidade desejada de SLES 70%: ${qty}`;
+  await handleLeadFormSubmission({
+    form,
+    apiPayload,
+    formSubmitPayload,
+    successElement:
+      document.getElementById('contactSuccess'),
+    fallbackErrorMessage:
+      'Falha ao enviar o formulário.',
+    consoleErrorMessage:
+      'Erro ao enviar formulário de contato:',
+    alertMessage:
+      'Não foi possível enviar sua mensagem. Verifique sua conexão e tente novamente.'
+  });
+}
 
-  const messageInternational =
-    `Hello, I would like to speak with a LEADFLOW specialist. Here are my details:\n\n` +
-    `• Name: ${name}\n` +
-    `• Company: ${company}\n` +
-    `• Tax ID / Registration No.: ${cnpj}\n` +
-    `• Phone / WhatsApp: ${phone}\n` +
-    `• Email: ${email}\n` +
-    `• Desired SLES 70% quantity: ${qty}`;
+async function submitSampleRequestForm(event) {
+  event.preventDefault();
 
-  const messageText =
-    currentLang === 'pt'
-      ? messagePt
-      : messageInternational;
+  const form = event.currentTarget;
+  const name = readTrimmedInput('modalName');
+  const email = readTrimmedInput('modalEmail');
+  const company = readTrimmedInput('modalCompany');
+  const cnpj = readTrimmedInput('modalCnpj');
+  const location = readTrimmedInput('modalLocation');
+  const phone = readTrimmedInput('modalPhone');
+  const message = readTrimmedInput('modalMessage');
 
-  const encodedText = encodeURIComponent(messageText);
+  const formSubmitPayload = {
+    '_subject': `Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial (${name})`,
+    '_replyto': email,
+    '_to': TARGET_CONTACT_EMAIL,
+    'Nome Completo': name,
+    'Empresa': company,
+    'CNPJ / Registro da Empresa': cnpj,
+    'Cidade / Estado / País': location,
+    'email': email,
+    'Telefone / WhatsApp': phone,
+    'Especificações / Amostra': message
+  };
 
-  if (USE_LOCAL_LEAD_API) {
-    try {
-      const response = await fetch(
-        LOCAL_LEAD_API_URL,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          body: JSON.stringify(whatsappApiPayload)
-        }
-      );
+  const apiPayload = {
+    type: 'sample_request',
+    name,
+    email,
+    company,
+    company_registration: cnpj,
+    phone,
+    location,
+    message,
+    language: currentLang,
+    source_page: 'home',
+    website: ''
+  };
 
-      const data = await response.json();
+  await handleLeadFormSubmission({
+    form,
+    apiPayload,
+    formSubmitPayload,
+    successElement:
+      document.getElementById('modalSuccess'),
+    successText:
+      translations[currentLang]?.form_success ||
+      'Solicitação enviada com sucesso! Nossa equipe entrará em contato.',
+    fallbackErrorMessage:
+      'Falha ao enviar a solicitação.',
+    consoleErrorMessage:
+      'Erro ao enviar solicitação de amostra:',
+    alertMessage:
+      'Não foi possível enviar a solicitação. Verifique sua conexão e tente novamente.'
+  });
+}
+// Configurable WhatsApp Target Number (Change this to your actual corporate number)
 
-      if (!response.ok) {
-        throw new Error(
-          data.message || 'Falha ao registrar o lead.'
-        );
-      }
-    } catch (error) {
-      console.error(
-        'Erro ao registrar lead do WhatsApp:',
-        error
-      );
+// WhatsApp Floating Button & Lead Form Logic
+function initLeadInputMasks() {
+  const phoneInputIds = [
+    'wa_lead_phone',
+    'contact_phone',
+    'modalPhone'
+  ];
 
-      alert(
-        'Não foi possível registrar seus dados. Tente novamente.'
-      );
+  const companyRegistrationInputIds = [
+    'wa_lead_cnpj',
+    'contact_cnpj',
+    'modalCnpj'
+  ];
 
-      return;
-    }
-  }
-  if (USE_LOCAL_LEAD_API) {
-    alert(
-      'Lead registrado localmente. A abertura do WhatsApp está desativada nesta demonstração.'
+  phoneInputIds.forEach(inputId => {
+    registerInputFormatter(inputId, formatPhone);
+  });
+
+  companyRegistrationInputIds.forEach(inputId => {
+    registerInputFormatter(
+      inputId,
+      formatCompanyRegistration
     );
+  });
+}
+
+function registerInputFormatter(inputId, formatter) {
+  const input = document.getElementById(inputId);
+
+  input?.addEventListener('input', event => {
+    event.target.value = formatter(event.target.value);
+  });
+}
+
+function formatPhone(value) {
+  if (currentLang !== 'pt') {
+    return value
+      .replace(/[^\d+()\s-]/g, '')
+      .replace(/(?!^)\+/g, '')
+      .slice(0, 25);
+  }
+
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+
+  if (digits.length > 10) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 7)}-${digits.slice(7)}`;
+  }
+
+  if (digits.length > 6) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2, 6)}-${digits.slice(6)}`;
+  }
+
+  if (digits.length > 2) {
+    return `(${digits.slice(0, 2)}) ${digits.slice(2)}`;
+  }
+
+  return digits.length > 0 ? `(${digits}` : '';
+}
+
+function formatCompanyRegistration(value) {
+  if (currentLang !== 'pt') {
+    return value;
+  }
+
+  const digits = value.replace(/\D/g, '').slice(0, 14);
+
+  if (digits.length > 12) {
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8, 12)}-${digits.slice(12)}`;
+  }
+
+  if (digits.length > 8) {
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5, 8)}/${digits.slice(8)}`;
+  }
+
+  if (digits.length > 5) {
+    return `${digits.slice(0, 2)}.${digits.slice(2, 5)}.${digits.slice(5)}`;
+  }
+
+  if (digits.length > 2) {
+    return `${digits.slice(0, 2)}.${digits.slice(2)}`;
+  }
+
+  return digits;
+}
+
+function toggleWhatsappLeadModal(open) {
+  if (open) {
+    openLeadModal('whatsappLeadModal');
   } else {
+    closeLeadModal(document.getElementById('whatsappLeadModal'));
+  }
+}
+
+async function submitWhatsappLead(event) {
+  event.preventDefault();
+
+  const form = event.currentTarget;
+
+  const apiPayload = {
+    type: 'whatsapp',
+    name: readTrimmedInput('wa_lead_name'),
+    email: readTrimmedInput('wa_lead_email'),
+    company: readTrimmedInput('wa_lead_company'),
+    company_registration:
+      readTrimmedInput('wa_lead_cnpj'),
+    phone: readTrimmedInput('wa_lead_phone'),
+    quantity: readTrimmedInput('wa_lead_qty'),
+    language: currentLang,
+    source_page: 'home',
+    website: ''
+  };
+
+  const submitButton =
+    form.querySelector('button[type="submit"]');
+
+  const originalButtonText =
+    submitButton?.textContent.trim() || '';
+
+  setSubmitButtonState(
+    submitButton,
+    true,
+    originalButtonText
+  );
+
+  try {
+    await submitLeadRequest(
+      apiPayload,
+      null,
+      'Falha ao registrar o lead.'
+    );
+
+    if (USE_LOCAL_LEAD_API) {
+      alert(
+        'Lead registrado localmente. A abertura do WhatsApp está desativada nesta demonstração.'
+      );
+    } else {
+      alert(
+        'Demonstração concluída. Nenhum dado foi transmitido.'
+      );
+    }
+
+    toggleWhatsappLeadModal(false);
+    form.reset();
+  } catch (error) {
+    console.error(
+      'Erro ao registrar lead demonstrativo:',
+      error
+    );
+
     alert(
-      'Demonstração concluída. Nenhum dado foi transmitido.'
+      'Não foi possível concluir a demonstração. Tente novamente.'
+    );
+  } finally {
+    setSubmitButtonState(
+      submitButton,
+      false,
+      originalButtonText
     );
   }
-
-  // Close the modal and reset the form
-  toggleWhatsappLeadModal(false);
-  document.getElementById('whatsappLeadForm').reset();
 }
