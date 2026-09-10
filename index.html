@@ -651,10 +651,10 @@
   <div class="modal-overlay" id="sampleModal">
     <div class="modal-card">
       <button class="modal-close-btn" id="modalCloseBtn">✕</button>
-      <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
-      <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
+      <h3 class="sample-modal-title" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
+      <p class="sample-modal-description" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
 
-      <form id="modalForm" action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+      <form id="modalForm" action="#" method="POST">
         <input type="hidden" name="_to" value="contato@leadflow.example">
         <input type="hidden" name="_subject" value="Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial">
         <div class="form-group">
@@ -686,7 +686,7 @@
           <input type="text" class="form-control" id="modalMessage" name="especificacoes" placeholder="Descreva as especificações necessárias para a amostra" required
           data-i18n="modal_message_placeholder">
         </div>
-        <button type="submit" class="btn-primary" style="margin-top: 1rem; padding: 0.9rem;" data-i18n="form_submit">Enviar Solicitação</button>
+        <button type="submit" class="btn-primary sample-modal-submit" data-i18n="form_submit">Enviar Solicitação</button>
         <div class="form-success-msg" id="modalSuccess" data-i18n="form_success">Sua solicitação foi enviada com sucesso! Nossa equipe entrará em contato em breve.</div>
       </form>
     </div>
@@ -831,49 +831,49 @@
     <div class="modal-card" onclick="event.stopPropagation()">
       <button class="modal-close-btn" onclick="toggleWhatsappLeadModal(false)">&times;</button>
 
-      <div style="text-align: center; margin-bottom: 1.5rem;">
-        <div style="background: rgba(15, 76, 58, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.8rem;">
+      <div class="whatsapp-modal-header">
+        <div class="whatsapp-modal-icon">
           <svg viewBox="0 0 24 24" width="32" height="32" fill="#0F4C3A">
             <path d="M12.031 2c-5.502 0-9.969 4.468-9.969 9.97 0 1.758.459 3.469 1.332 4.984L2 22l5.223-1.371c1.477.805 3.137 1.229 4.805 1.229 5.504 0 9.973-4.469 9.973-9.97 0-2.656-1.031-5.156-2.906-7.03A9.905 9.905 0 0 0 12.031 2zm5.828 13.914c-.242.684-1.207 1.258-1.656 1.32-.449.062-.898.113-2.887-.676-2.547-1.012-4.172-3.602-4.297-3.774-.125-.172-1.027-1.375-1.027-2.617 0-1.242.648-1.855.883-2.109.234-.254.512-.316.684-.316.172 0 .344.004.492.012.152.008.355-.058.555.43.203.492.691 1.691.75 1.816.059.125.098.27.012.441-.082.172-.125.277-.25.426-.125.148-.262.332-.375.445-.125.125-.254.262-.109.512.145.25.641 1.059 1.379 1.715.953.848 1.754 1.113 2.008 1.242.254.129.402.109.551-.059.148-.172.648-.758.824-1.016.176-.258.352-.215.594-.125.242.09.1.535 2.113 1.543.203.1.336.172.414.297.078.125.078.723-.164 1.407z"/>
           </svg>
         </div>
-        <h3 style="font-size: 1.35rem; color: var(--primary); margin-bottom: 0.4rem; font-weight: 800;" data-i18n="wa_modal_title">Falar com Consultor</h3>
-        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.4;" data-i18n="wa_modal_desc">Preencha os dados abaixo para iniciar sua cotação corporativa de SLES 70% pelo WhatsApp.</p>
+        <h3 class="whatsapp-modal-title" data-i18n="wa_modal_title">Falar com Consultor</h3>
+        <p class="whatsapp-modal-description" data-i18n="wa_modal_desc">Preencha os dados abaixo para iniciar sua cotação corporativa de SLES 70% pelo WhatsApp.</p>
       </div>
 
-      <form id="whatsappLeadForm" action="#" method="POST" onsubmit="submitWhatsappLead(event)" style="display: flex; flex-direction: column; gap: 0.9rem;">
+      <form id="whatsappLeadForm" action="#" method="POST" onsubmit="submitWhatsappLead(event)">
         <input type="hidden" name="_to" value="contato@leadflow.example">
         <input type="hidden" name="_subject" value="Novo Lead WhatsApp - LeadFlow Industrial">
         <div>
-          <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_name">Nome Completo</label>
-          <input type="text" id="wa_lead_name" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem;" placeholder="Seu nome completo" data-i18n="wa_form_name_placeholder">
+          <label data-i18n="wa_form_name">Nome Completo</label>
+          <input type="text" id="wa_lead_name" required placeholder="Seu nome completo" data-i18n="wa_form_name_placeholder">
         </div>
 
-        <div class="wa-form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+        <div class="wa-form-row">
           <div>
-            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_phone">WhatsApp</label>
-            <input type="text" id="wa_lead_phone" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem;" placeholder="(00) 00000-0000" data-i18n="wa_form_phone_placeholder">
+            <label data-i18n="wa_form_phone">WhatsApp</label>
+            <input type="text" id="wa_lead_phone" required placeholder="(00) 00000-0000" data-i18n="wa_form_phone_placeholder">
           </div>
           <div>
-            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_email">E-mail Corporativo</label>
-            <input type="email" id="wa_lead_email" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem;" placeholder="nome@empresa.com" data-i18n="wa_form_email_placeholder">
+            <label data-i18n="wa_form_email">E-mail Corporativo</label>
+            <input type="email" id="wa_lead_email" required placeholder="nome@empresa.com" data-i18n="wa_form_email_placeholder">
           </div>
         </div>
 
-        <div class="wa-form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+        <div class="wa-form-row">
           <div>
-            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_company">Empresa</label>
-            <input type="text" id="wa_lead_company" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem;" placeholder="Nome da empresa" data-i18n="wa_form_company_placeholder">
+            <label data-i18n="wa_form_company">Empresa</label>
+            <input type="text" id="wa_lead_company" required placeholder="Nome da empresa" data-i18n="wa_form_company_placeholder">
           </div>
           <div>
-            <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_cnpj">CNPJ</label>
-            <input type="text" id="wa_lead_cnpj" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem;" placeholder="00.000.000/0000-00" data-i18n="wa_form_cnpj_placeholder">
+            <label data-i18n="wa_form_cnpj">CNPJ</label>
+            <input type="text" id="wa_lead_cnpj" required placeholder="00.000.000/0000-00" data-i18n="wa_form_cnpj_placeholder">
           </div>
         </div>
 
         <div>
-          <label style="display: block; font-size: 0.78rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px;" data-i18n="wa_form_qty">Quantidade de SLES 70% desejada</label>
-          <select id="wa_lead_qty" required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: #FFF;">
+          <label data-i18n="wa_form_qty">Quantidade de SLES 70% desejada</label>
+          <select id="wa_lead_qty" required>
             <option value="" disabled selected data-i18n="wa_form_qty_placeholder">Selecione a quantidade...</option>
             <option value="Menos de 1 Tonelada" data-i18n="wa_qty_1">Menos de 1 Tonelada</option>
             <option value="1 a 5 Toneladas" data-i18n="wa_qty_2">1 a 5 Toneladas</option>
@@ -882,11 +882,11 @@
           </select>
         </div>
 
-        <button type="submit" class="btn-primary" style="width: 100%; padding: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: 8px; margin-top: 0.5rem;" data-i18n="wa_form_submit">
+        <button type="submit" class="btn-primary whatsapp-modal-submit" data-i18n="wa_form_submit">
           Enviar e Iniciar Conversa
         </button>
       </form>
-      <p data-i18n="wa_form_notice" style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4; text-align: center; margin: 0.35rem 0 0;">Modo demonstrativo: os dados não serão transmitidos e nenhuma conversa externa será aberta.</p>
+      <p class="whatsapp-modal-notice" data-i18n="wa_form_notice">Modo demonstrativo: os dados não serão transmitidos e nenhuma conversa externa será aberta.</p>
     </div>
   </div>
 
