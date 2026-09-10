@@ -1,11 +1,10 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 
 $projectRoot = $PSScriptRoot
 $distPath = Join-Path $projectRoot "dist"
 
 $publicFiles = @(
     "index.html"
-    "favicon.ico"
     "robots.txt"
     "sitemap.xml"
 )
