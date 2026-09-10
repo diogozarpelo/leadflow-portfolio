@@ -13,6 +13,12 @@ class LeadDeliveryAttempt extends Model
 
     public const STATUS_FAILED = 'failed';
 
+    public const array STATUSES = [
+        self::STATUS_PROCESSING,
+        self::STATUS_SUCCEEDED,
+        self::STATUS_FAILED,
+    ];
+
     protected $fillable = [
         'attempt_number',
         'driver',

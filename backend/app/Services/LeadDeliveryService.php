@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\LeadDeliveryDriver;
 use App\Data\LeadDeliveryPayload;
+use App\Data\LeadDeliveryResult;
 use App\Exceptions\LeadDeliveryException;
 use App\Models\Lead;
 use App\Models\LeadDeliveryAttempt;
@@ -51,6 +52,52 @@ final class LeadDeliveryService
             return;
         }
 
+        $attempt = $this->createAttempt(
+            $lead,
+            $attemptNumber
+        );
+
+        try {
+            $result = $this->driver->deliver(
+                LeadDeliveryPayload::fromLead($lead)
+            );
+
+            $this->completeDelivery(
+                $lead,
+                $attempt,
+                $result
+            );
+        } catch (LeadDeliveryException $exception) {
+            $this->handleFailure(
+                $lead,
+                $attempt,
+                $attemptNumber,
+                $exception->retryable,
+                $exception->httpStatus,
+                $exception->errorCode,
+                $exception->getMessage()
+            );
+
+            throw $exception;
+        } catch (Throwable $exception) {
+            $this->handleFailure(
+                $lead,
+                $attempt,
+                $attemptNumber,
+                true,
+                null,
+                'unexpected_error',
+                'Unexpected lead delivery failure.'
+            );
+
+            throw $exception;
+        }
+    }
+
+    private function createAttempt(
+        Lead $lead,
+        int $attemptNumber
+    ): LeadDeliveryAttempt {
         $attempt = $lead->deliveryAttempts()->create([
             'attempt_number' => $attemptNumber,
             'driver' => mb_substr($this->driver->name(), 0, 50),
@@ -65,66 +112,26 @@ final class LeadDeliveryService
 
         $this->logger->attemptStarted($lead, $attempt);
 
-        try {
-            $result = $this->driver->deliver(
-                LeadDeliveryPayload::fromLead($lead)
-            );
+        return $attempt;
+    }
 
-            $attempt->forceFill([
-                'status' => LeadDeliveryAttempt::STATUS_SUCCEEDED,
-                'http_status' => $result->httpStatus,
-                'external_id' => $this->limit(
-                    $result->externalId,
-                    191
-                ),
-                'finished_at' => now(),
-            ])->save();
+    private function completeDelivery(
+        Lead $lead,
+        LeadDeliveryAttempt $attempt,
+        LeadDeliveryResult $result
+    ): void {
+        $attempt->forceFill([
+            'status' => LeadDeliveryAttempt::STATUS_SUCCEEDED,
+            'http_status' => $result->httpStatus,
+            'external_id' => $this->limit(
+                $result->externalId,
+                191
+            ),
+            'finished_at' => now(),
+        ])->save();
 
-            $lead->transitionTo(Lead::STATUS_SENT);
-            $this->logger->attemptSucceeded($lead, $attempt);
-        } catch (LeadDeliveryException $exception) {
-            $this->markAttemptAsFailed(
-                $attempt,
-                $exception->httpStatus,
-                $exception->errorCode,
-                $exception->getMessage()
-            );
-
-            $this->transitionAfterFailure(
-                $lead,
-                $attemptNumber,
-                $exception->retryable
-            );
-
-            $this->logger->attemptFailed(
-                $lead,
-                $attempt,
-                $exception->retryable
-            );
-
-            throw $exception;
-        } catch (Throwable $exception) {
-            $this->markAttemptAsFailed(
-                $attempt,
-                null,
-                'unexpected_error',
-                'Unexpected lead delivery failure.'
-            );
-
-            $this->transitionAfterFailure(
-                $lead,
-                $attemptNumber,
-                true
-            );
-
-            $this->logger->attemptFailed(
-                $lead,
-                $attempt,
-                true
-            );
-
-            throw $exception;
-        }
+        $lead->transitionTo(Lead::STATUS_SENT);
+        $this->logger->attemptSucceeded($lead, $attempt);
     }
 
     private function prepareForDelivery(Lead $lead): bool
@@ -191,6 +198,35 @@ final class LeadDeliveryService
         $lead->transitionTo(Lead::STATUS_RETRYING);
 
         return true;
+    }
+
+    private function handleFailure(
+        Lead $lead,
+        LeadDeliveryAttempt $attempt,
+        int $attemptNumber,
+        bool $retryable,
+        ?int $httpStatus,
+        ?string $errorCode,
+        string $errorMessage
+    ): void {
+        $this->markAttemptAsFailed(
+            $attempt,
+            $httpStatus,
+            $errorCode,
+            $errorMessage
+        );
+
+        $this->transitionAfterFailure(
+            $lead,
+            $attemptNumber,
+            $retryable
+        );
+
+        $this->logger->attemptFailed(
+            $lead,
+            $attempt,
+            $retryable
+        );
     }
 
     private function transitionAfterFailure(

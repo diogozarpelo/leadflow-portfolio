@@ -13,26 +13,6 @@ use Illuminate\Console\Command;
 final class LeadDeliveryStatus extends Command
 {
     /**
-     * @var array<int, string>
-     */
-    private const LEAD_STATUSES = [
-        Lead::STATUS_PENDING,
-        Lead::STATUS_PROCESSING,
-        Lead::STATUS_RETRYING,
-        Lead::STATUS_SENT,
-        Lead::STATUS_FAILED,
-    ];
-
-    /**
-     * @var array<int, string>
-     */
-    private const ATTEMPT_STATUSES = [
-        LeadDeliveryAttempt::STATUS_PROCESSING,
-        LeadDeliveryAttempt::STATUS_SUCCEEDED,
-        LeadDeliveryAttempt::STATUS_FAILED,
-    ];
-
-    /**
      * Execute the console command.
      */
     public function handle(): int
@@ -92,7 +72,7 @@ final class LeadDeliveryStatus extends Command
                 $status,
                 (int) ($counts[$status] ?? 0),
             ],
-            self::LEAD_STATUSES
+            Lead::STATUSES
         );
     }
 
@@ -111,7 +91,7 @@ final class LeadDeliveryStatus extends Command
                 $status,
                 (int) ($counts[$status] ?? 0),
             ],
-            self::ATTEMPT_STATUSES
+            LeadDeliveryAttempt::STATUSES
         );
     }
 }

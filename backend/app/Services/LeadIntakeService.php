@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Jobs\DeliverLeadJob;
 use App\Models\Lead;
 
-class LeadIntakeService
+final class LeadIntakeService
 {
     /**
      * @var array<int, string>
@@ -29,24 +29,23 @@ class LeadIntakeService
     {
         $lead = Lead::create($this->normalize($attributes));
 
-        if ($this->deliveryIsConfigured()) {
+        if ($this->shouldDispatchDelivery()) {
             DeliverLeadJob::dispatch($lead)->afterCommit();
         }
 
         return $lead;
     }
 
+    private function shouldDispatchDelivery(): bool
+    {
+        return (bool) config('lead-delivery.enabled', false)
+            && (string) config('lead-delivery.driver', 'null') !== 'null';
+    }
+
     /**
      * @param  array<string, mixed>  $attributes
      * @return array<string, mixed>
      */
-    private function deliveryIsConfigured(): bool
-    {
-        return (bool) config('lead-delivery.enabled', false)
-        && (string) config('lead-delivery.driver', 'null')
-            !== 'null';
-    }
-
     private function normalize(array $attributes): array
     {
         foreach (self::TRIMMABLE_FIELDS as $field) {

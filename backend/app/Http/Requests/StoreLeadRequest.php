@@ -8,6 +8,19 @@ use Illuminate\Validation\Rule;
 
 class StoreLeadRequest extends FormRequest
 {
+    private const array LANGUAGES = [
+        'pt',
+        'en',
+        'es',
+        'zh',
+        'ar',
+    ];
+
+    private const array SOURCE_PAGES = [
+        'home',
+        'blog',
+    ];
+
     public function authorize(): bool
     {
         return true;
@@ -20,17 +33,14 @@ class StoreLeadRequest extends FormRequest
      */
     public function rules(): array
     {
-        $type = (string) $this->input('type');
+        $inputType = $this->input('type');
+        $type = is_string($inputType) ? $inputType : '';
 
         return [
             'type' => [
                 'required',
                 'string',
-                Rule::in([
-                    Lead::TYPE_CONTACT,
-                    Lead::TYPE_SAMPLE_REQUEST,
-                    Lead::TYPE_WHATSAPP,
-                ]),
+                Rule::in(Lead::TYPES),
             ],
             'name' => ['required', 'string', 'max:150'],
             'email' => ['required', 'email:rfc', 'max:254'],
@@ -77,12 +87,12 @@ class StoreLeadRequest extends FormRequest
             'language' => [
                 'required',
                 'string',
-                Rule::in(['pt', 'en', 'es', 'zh', 'ar']),
+                Rule::in(self::LANGUAGES),
             ],
             'source_page' => [
                 'required',
                 'string',
-                Rule::in(['home', 'blog']),
+                Rule::in(self::SOURCE_PAGES),
             ],
             'website' => ['prohibited'],
         ];

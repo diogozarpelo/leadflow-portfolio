@@ -128,6 +128,27 @@ class LeadEndpointTest extends TestCase
         $this->assertDatabaseCount('leads', 0);
     }
 
+    public function test_it_rejects_a_non_string_lead_type(): void
+    {
+        $response = $this->postJson('/api/leads', [
+            'type' => [Lead::TYPE_CONTACT],
+            'name' => 'Cliente Teste',
+            'email' => 'cliente@example.com',
+            'company' => 'Empresa Teste',
+            'phone' => '+55 14 99999-0000',
+            'sector' => 'Higiene e Limpeza',
+            'message' => 'Solicitação de informações.',
+            'language' => 'pt',
+            'source_page' => 'home',
+        ]);
+
+        $response
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['type']);
+
+        $this->assertDatabaseCount('leads', 0);
+    }
+
     public function test_it_rate_limits_repeated_lead_submissions(): void
     {
         $payload = [
