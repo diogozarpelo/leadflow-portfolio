@@ -141,7 +141,7 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-i18n="nav_request_sample">Solicitar Amostra</button>
+        <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-open-modal="sampleModal" data-sample-product="SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="nav_request_sample">Solicitar Amostra</button>
         <button class="mobile-toggle" id="mobileToggle">☰</button>
       </div>
     </div>
@@ -168,7 +168,7 @@
         <p class="hero-subtitle" data-i18n="hero_subtitle">O tensoativo aniônico essencial para formulações de alto padrão. Excelente poder espumante, alta detergência, suavidade dérmica e 100% biodegradável.</p>
 
         <div class="hero-ctas">
-          <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-i18n="hero_cta_sample">Solicitar Amostra de SLES 70%</button>
+          <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-open-modal="sampleModal" data-sample-product="SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="hero_cta_sample">Solicitar Amostra de SLES 70%</button>
         </div>
 
         <div class="hero-stats">
@@ -321,7 +321,7 @@
         <p class="section-subtitle" style="text-align: left; margin-bottom: 2rem;" data-i18n="sles_subtitle">Matéria-prima indispensável para a indústria cosmética e de saneantes. Proporciona espuma rica, estável e ação detergente superior.</p>
 
         <div style="display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;">
-          <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-i18n="hero_cta_sample">Solicitar Amostra de SLES 70%</button>
+          <button class="btn-primary" onclick="openSampleModal('SLES 70%')" data-open-modal="sampleModal" data-sample-product="SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="hero_cta_sample">Solicitar Amostra de SLES 70%</button>
         </div>
       </div>
 
@@ -437,7 +437,7 @@
             </div>
           </div>
 
-          <button class="btn-outline" onclick="openSampleModal('Cosméticos SLES 70%')" data-i18n="btn_tds">Solicitar TDS</button>
+          <button class="btn-outline" onclick="openSampleModal('Cosméticos SLES 70%')" data-open-modal="sampleModal" data-sample-product="Cosméticos SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="btn_tds">Solicitar TDS</button>
         </div>
       </div>
 
@@ -467,7 +467,7 @@
             </div>
           </div>
 
-          <button class="btn-outline" onclick="openSampleModal('Limpeza SLES 70%')" data-i18n="btn_tds">Solicitar TDS</button>
+          <button class="btn-outline" onclick="openSampleModal('Limpeza SLES 70%')" data-open-modal="sampleModal" data-sample-product="Limpeza SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="btn_tds">Solicitar TDS</button>
         </div>
       </div>
 
@@ -497,7 +497,7 @@
             </div>
           </div>
 
-          <button class="btn-outline" onclick="openSampleModal('Higiene SLES 70%')" data-i18n="btn_tds">Solicitar TDS</button>
+          <button class="btn-outline" onclick="openSampleModal('Higiene SLES 70%')" data-open-modal="sampleModal" data-sample-product="Higiene SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="btn_tds">Solicitar TDS</button>
         </div>
       </div>
     </div>
@@ -648,41 +648,41 @@
   </section>
 
   <!-- Technical Sample Modal -->
-  <div class="modal-overlay" id="sampleModal">
-    <div class="modal-card">
-      <button class="modal-close-btn" id="modalCloseBtn">✕</button>
-      <h3 class="sample-modal-title" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
-      <p class="sample-modal-description" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
+  <div id="sampleModal" class="modal-overlay" data-lead-modal role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="sampleModalTitle" aria-describedby="sampleModalDescription" inert>
+    <div class="modal-card" tabindex="-1">
+      <button type="button" class="modal-close-btn" id="modalCloseBtn" data-close-modal aria-label="Fechar" data-i18n-aria-label="modal_close">✕</button>
+      <h3 class="sample-modal-title" id="sampleModalTitle" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
+      <p class="sample-modal-description" id="sampleModalDescription" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
 
       <form id="modalForm" action="#" method="POST">
         <input type="hidden" name="_to" value="contato@leadflow.example">
         <input type="hidden" name="_subject" value="Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial">
         <div class="form-group">
-          <label data-i18n="form_name">Nome Completo</label>
+          <label for="modalName" data-i18n="form_name">Nome Completo</label>
           <input type="text" id="modalName" name="nome" class="form-control" required>
         </div>
         <div class="form-group">
-          <label data-i18n="form_email">E-mail Corporativo</label>
+          <label for="modalEmail" data-i18n="form_email">E-mail Corporativo</label>
           <input type="email" id="modalEmail" name="email" class="form-control" required>
         </div>
         <div class="form-group">
-          <label data-i18n="form_company">Empresa</label>
+          <label for="modalCompany" data-i18n="form_company">Empresa</label>
           <input type="text" id="modalCompany" name="empresa" class="form-control" required>
         </div>
         <div class="form-group">
-          <label data-i18n="modal_cnpj">CNPJ / Registro da Empresa</label>
+          <label for="modalCnpj" data-i18n="modal_cnpj">CNPJ / Registro da Empresa</label>
           <input type="text" id="modalCnpj" name="cnpj" class="form-control" required placeholder="00.000.000/0000-00" data-i18n="modal_cnpj_placeholder">
         </div>
         <div class="form-group">
-          <label data-i18n="modal_location">Cidade / Estado / País</label>
+          <label for="modalLocation" data-i18n="modal_location">Cidade / Estado / País</label>
           <input type="text" id="modalLocation" name="localizacao" class="form-control" required placeholder="Ex.: São Paulo / SP / Brasil" data-i18n="modal_location_placeholder">
         </div>
         <div class="form-group">
-          <label data-i18n="form_phone">Telefone / WhatsApp</label>
+          <label for="modalPhone" data-i18n="form_phone">Telefone / WhatsApp</label>
           <input type="text" id="modalPhone" name="telefone" class="form-control" required placeholder="(00) 00000-0000" data-i18n="form_phone_placeholder">
         </div>
         <div class="form-group">
-          <label data-i18n="form_message">Especificações / Produto Solicitado</label>
+          <label for="modalMessage" data-i18n="form_message">Especificações / Produto Solicitado</label>
           <input type="text" class="form-control" id="modalMessage" name="especificacoes" placeholder="Descreva as especificações necessárias para a amostra" required
           data-i18n="modal_message_placeholder">
         </div>
