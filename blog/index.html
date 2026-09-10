@@ -190,10 +190,10 @@
   <div class="modal-overlay" id="sampleModal">
     <div class="modal-card">
       <button class="modal-close-btn" id="modalCloseBtn">✕</button>
-      <h3 style="margin-bottom: 0.5rem; color: var(--primary-dark);" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
-      <p style="margin-bottom: 1.5rem; color: var(--text-muted); font-size: 0.95rem;" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
+      <h3 class="sample-modal-title" data-i18n="modal_title">Solicitação de Amostra Técnica — SLES 70%</h3>
+      <p class="sample-modal-description" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
 
-      <form id="modalForm" action="#" method="POST" style="display: flex; flex-direction: column; gap: 1rem;">
+      <form id="modalForm" action="#" method="POST">
         <input type="hidden" name="_to" value="contato@leadflow.example">
         <input type="hidden" name="_subject" value="Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial">
         <div class="form-group">
@@ -225,7 +225,7 @@
           <input type="text" class="form-control" id="modalMessage" name="especificacoes" placeholder="Descreva as especificações necessárias para a amostra" required
           data-i18n="modal_message_placeholder">
         </div>
-        <button type="submit" class="btn-primary" style="margin-top: 1rem; padding: 0.9rem;" data-i18n="form_submit">Enviar Solicitação</button>
+        <button type="submit" class="btn-primary sample-modal-submit" data-i18n="form_submit">Enviar Solicitação</button>
         <div class="form-success-msg" id="modalSuccess" data-i18n="form_success">Sua solicitação foi enviada com sucesso! Nossa equipe entrará em contato em breve.</div>
       </form>
     </div>
