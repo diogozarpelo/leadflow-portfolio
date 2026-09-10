@@ -220,24 +220,8 @@
     finishLoading();
   }
 
-  function initializeSampleModalTriggers() {
-    document
-      .querySelectorAll('[data-open-sample-modal]')
-      .forEach((trigger) => {
-        trigger.addEventListener('click', () => {
-          const productName =
-            trigger.dataset.product || 'SLES 70%';
-
-          if (typeof openSampleModal === 'function') {
-            openSampleModal(productName);
-          }
-        });
-      });
-  }
-
   function initializeBlog() {
     renderBlog();
-    initializeSampleModalTriggers();
   }
 
   if (document.readyState === 'loading') {

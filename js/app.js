@@ -192,7 +192,7 @@ function initLeadModals() {
   document.querySelectorAll('[data-open-modal]').forEach(trigger => {
     trigger.addEventListener('click', () => {
       if (trigger.dataset.openModal === 'sampleModal') {
-        openSampleModal(trigger.dataset.sampleProduct, trigger);
+        openSampleModal(trigger);
       } else {
         openLeadModal(trigger.dataset.openModal, trigger);
       }
@@ -287,7 +287,7 @@ function closeLeadModal(modal, { restoreFocus = true } = {}) {
 }
 
 // Public entry point also used by the blog's dynamically generated buttons.
-function openSampleModal(productName = 'SLES 70%', trigger = document.activeElement) {
+function openSampleModal(trigger = document.activeElement) {
   const success = document.getElementById('modalSuccess');
   if (success) success.style.display = 'none';
   openLeadModal('sampleModal', trigger);
@@ -296,9 +296,6 @@ function openSampleModal(productName = 'SLES 70%', trigger = document.activeElem
 function closeSampleModal(options = {}) {
   closeLeadModal(document.getElementById('sampleModal'), options);
 }
-
-// Target Email for all Contact Forms
-const TARGET_CONTACT_EMAIL = 'contato@leadflow.example';
 
 // Backend local utilizado somente durante o desenvolvimento
 const LOCAL_LEAD_API_URL =
@@ -326,7 +323,6 @@ function createPortfolioDemoResponse() {
 
 async function submitLeadRequest(
   apiPayload,
-  _emailPayload,
   fallbackErrorMessage
 ) {
   const response = USE_LOCAL_LEAD_API
@@ -399,7 +395,6 @@ function setSubmitButtonState(
 async function handleLeadFormSubmission({
   form,
   apiPayload,
-  formSubmitPayload,
   successElement,
   successText,
   fallbackErrorMessage,
@@ -425,7 +420,6 @@ async function handleLeadFormSubmission({
   try {
     await submitLeadRequest(
       apiPayload,
-      formSubmitPayload,
       fallbackErrorMessage
     );
 
@@ -466,19 +460,6 @@ async function submitContactForm(event) {
 
   const sector = selectedOptionText(sectorSelect);
 
-  const formSubmitPayload = {
-    '_subject': `Novo Contato pelo Site - LeadFlow Industrial (${name})`,
-    '_replyto': email,
-    '_to': TARGET_CONTACT_EMAIL,
-    'Nome Completo': name,
-    'Empresa': company,
-    'email': email,
-    'CNPJ / Registro da Empresa': cnpj,
-    'Telefone / WhatsApp': phone,
-    'Setor': sector,
-    'Mensagem': message
-  };
-
   const apiPayload = {
     type: 'contact',
     name,
@@ -496,7 +477,6 @@ async function submitContactForm(event) {
   await handleLeadFormSubmission({
     form,
     apiPayload,
-    formSubmitPayload,
     successElement:
       document.getElementById('contactSuccess'),
     fallbackErrorMessage:
@@ -520,19 +500,6 @@ async function submitSampleRequestForm(event) {
   const phone = readTrimmedInput('modalPhone');
   const message = readTrimmedInput('modalMessage');
 
-  const formSubmitPayload = {
-    '_subject': `Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial (${name})`,
-    '_replyto': email,
-    '_to': TARGET_CONTACT_EMAIL,
-    'Nome Completo': name,
-    'Empresa': company,
-    'CNPJ / Registro da Empresa': cnpj,
-    'Cidade / Estado / País': location,
-    'email': email,
-    'Telefone / WhatsApp': phone,
-    'Especificações / Amostra': message
-  };
-
   const apiPayload = {
     type: 'sample_request',
     name,
@@ -550,7 +517,6 @@ async function submitSampleRequestForm(event) {
   await handleLeadFormSubmission({
     form,
     apiPayload,
-    formSubmitPayload,
     successElement:
       document.getElementById('modalSuccess'),
     successText:
@@ -564,8 +530,6 @@ async function submitSampleRequestForm(event) {
       'Não foi possível enviar a solicitação. Verifique sua conexão e tente novamente.'
   });
 }
-// Configurable WhatsApp Target Number (Change this to your actual corporate number)
-
 // WhatsApp Floating Button & Lead Form Logic
 function initLeadInputMasks() {
   const phoneInputIds = [
@@ -693,7 +657,6 @@ async function submitWhatsappLead(event) {
   try {
     await submitLeadRequest(
       apiPayload,
-      null,
       'Falha ao registrar o lead.'
     );
 

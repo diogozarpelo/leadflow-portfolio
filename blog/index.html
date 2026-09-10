@@ -59,7 +59,7 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="btn-primary" data-open-modal="sampleModal" data-sample-product="SLES 70%" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="nav_request_sample">Solicitar Amostra</button>
+        <button class="btn-primary" data-open-modal="sampleModal" aria-haspopup="dialog" aria-controls="sampleModal" data-i18n="nav_request_sample">Solicitar Amostra</button>
         <button class="mobile-toggle" id="mobileToggle">☰</button>
       </div>
     </div>
@@ -194,8 +194,6 @@
       <p class="sample-modal-description" id="sampleModalDescription" data-i18n="modal_desc">Preencha os dados da sua empresa para envio do lote de amostra e certificado de análise (CoA).</p>
 
       <form id="modalForm" action="#" method="POST">
-        <input type="hidden" name="_to" value="contato@leadflow.example">
-        <input type="hidden" name="_subject" value="Solicitação de Amostra Técnica SLES 70% - LeadFlow Industrial">
         <div class="form-group">
           <label for="modalName" data-i18n="form_name">Nome Completo</label>
           <input type="text" id="modalName" name="nome" class="form-control" required>
